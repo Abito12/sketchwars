@@ -1,24 +1,15 @@
 import React from "react";
-import "./App.css";
+import {BrowserRouter as Router, Switch } from "react-router-dom";
+import { auth } from "./services/firebase";
 
-import {
-  Route,
-  BrowserRouter as Router,
-  Switch,
-} from "react-router-dom";
-import { auth } from './services/firebase';
-
-import { PrivateRoute, PublicRoute } from './helpers/routes';
-//import SignUp from './templates/SignUp';
-import Home from './components/Home';
-import Quiz from './components/Quiz';
-import Signup from './components/Signup';
-
+import { PrivateRoute, PublicRoute } from "./helpers/routes";
+import Quiz from "./components/Quiz";
+import Signup from "./components/Signup";
+import Loader from './templates/Loader';
 
 class App extends React.Component {
-
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       authenticated: false,
       loading: true
@@ -27,47 +18,25 @@ class App extends React.Component {
 
   componentDidMount() {
     auth().onAuthStateChanged(user => {
-      if (user) {
         this.setState({
-          authenticated: true,
+          authenticated: !!user,
           loading: false
         });
-      } else {
-        this.setState({
-          authenticated: false,
-          loading: false
-        });
-      }
     });
   }
 
-
-  render(){    
-    return this.state.loading ? 
-      (
-        <div>
-          <span>Loading...</span>
-        </div>
-      ) : (
+  render() {
+    const {loading, authenticated} = this.state;
+    return loading ? 
+      <Loader /> : 
       <Router>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <PrivateRoute
-            path="/quiz"
-            authenticated={this.state.authenticated}
-            component={Quiz}
-          />
-          <PublicRoute
-            path="/signup"
-            authenticated={this.state.authenticated}
-            component={Signup}
-          />
+          <PrivateRoute exact path="/" authenticated={authenticated} component={Quiz} />
+          <PrivateRoute path="/quiz" authenticated={authenticated} component={Quiz} />
+          <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
-      </Router> 
-    );
+      </Router>;
   }
-  
 }
 
-  
 export default App;

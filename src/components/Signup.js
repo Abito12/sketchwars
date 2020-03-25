@@ -1,25 +1,14 @@
-import React, {useState} from 'react';
+import React, {Component} from 'react';
 import { signup } from '../helpers/auth';
+import SignupView from '../templates/SignUp';
 
-function Signup() {
+export default class SignUpComponent extends Component {
 
-    const [errors, setErrors] = useState('');
+    signIn = async (method) => await signup(method);
 
-    const signIn = async (method) => {
-        try {
-            await signup(method);
-        } catch(err) {
-            setErrors(err);
-        }
+    render() {
+        return <SignupView signUpHandler={this.signIn} />;
     }
-
-    return (        
-        <div>
-            <button onClick={() => signIn('google')}>Signup with Google!</button>
-            <button onClick={() => signIn('facebook')}>Signup with Google!</button>
-            {errors.length > 0 ? <p>{errors}</p> : null}
-        </div>
-    )
 }
 
-export default Signup
+

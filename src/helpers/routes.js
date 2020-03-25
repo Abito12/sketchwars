@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-    Route,
-    BrowserRouter as Router,
-    Switch,
-    Redirect
-  } from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
   
-  export const PrivateRoute = ({
+export const PrivateRoute = ({
     component: Component,
     authenticated,
     ...rest
@@ -14,14 +9,9 @@ import {
     return (
       <Route
         {...rest}
-        render={props =>
-          authenticated === true ? (
-            <Component {...props} />
-          ) : (
-            <Redirect
-              to={{ pathname: "/signup", state: { from: props.location } }}
-            />
-          )
+        render={(props) => authenticated ?
+          <Component {...props} /> : 
+          <Redirect to={{ pathname: "/signup", state: { from: props.location } }} />
         }
       />
     );
@@ -35,13 +25,7 @@ import {
     return (
       <Route
         {...rest}
-        render={props =>
-          authenticated === false ? (
-            <Component {...props} />
-          ) : (
-            <Redirect to="/quiz" />
-          )
-        }
+        render={props => !authenticated ? <Component {...props} /> : <Redirect to="/quiz" />}
       />
     );
   };
