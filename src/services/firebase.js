@@ -5,6 +5,7 @@ const config = {
   authDomain: "elnino-945c4.firebaseapp.com",
   databaseURL: "https://elnino-945c4.firebaseio.com"
 };
+
 firebase.initializeApp(config);
 export const auth = firebase.auth;
 export const db = firebase.database();
