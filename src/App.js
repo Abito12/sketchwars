@@ -1,26 +1,73 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {
+  Route,
+  BrowserRouter as Router,
+  Switch,
+} from "react-router-dom";
+import { auth } from './services/firebase';
+
+import { PrivateRoute, PublicRoute } from './helpers/routes';
+//import SignUp from './templates/SignUp';
+import Home from './components/Home';
+import Quiz from './components/Quiz';
+import Signup from './components/Signup';
+
+
+class App extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      authenticated: false,
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({
+          authenticated: true,
+          loading: false
+        });
+      } else {
+        this.setState({
+          authenticated: false,
+          loading: false
+        });
+      }
+    });
+  }
+
+
+  render(){    
+    return this.state.loading ? 
+      (
+        <div>
+          <span>Loading...</span>
+        </div>
+      ) : (
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <PrivateRoute
+            path="/quiz"
+            authenticated={this.state.authenticated}
+            component={Quiz}
+          />
+          <PublicRoute
+            path="/signup"
+            authenticated={this.state.authenticated}
+            component={Signup}
+          />
+        </Switch>
+      </Router> 
+    );
+  }
+  
 }
 
+  
 export default App;
