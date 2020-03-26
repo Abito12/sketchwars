@@ -28,14 +28,12 @@ class App extends React.Component {
     auth().onAuthStateChanged(user => {
         this.setState({
           authenticated: !!user,
-          loading: false          
+          loading: false,
+          currentUserId: (user && user.uid) || ''        
         });
-        if(user){          
+        if(user) {          
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
-            if (snapshot.exists()){
-              const userData = snapshot.val();
-              console.log("exists!", userData);
-            } else {
+            if (!snapshot.exists()){
               seedUser("users", user);        
             }
           });            
@@ -62,8 +60,8 @@ class App extends React.Component {
       <Loader /> : 
       <Router>
         <Switch>
-          <PrivateRoute exact path="/" authenticated={authenticated} component={Quiz} />
-          <PrivateRoute path="/quiz" authenticated={authenticated} component={Quiz} />
+          <PrivateRoute exact path="/" {...this.state} component={Quiz} />
+          <PrivateRoute path="/quiz" {...this.state} component={Quiz} />
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;
