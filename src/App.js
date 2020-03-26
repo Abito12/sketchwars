@@ -5,10 +5,11 @@ import { auth } from "./services/firebase";
 import { PrivateRoute, PublicRoute } from "./helpers/routes";
 import Quiz from "./components/Quiz";
 import Signup from "./components/Signup";
+import Game from "./components/Game";
 import Loader from './templates/Loader';
 
 import { db } from "./services/firebase";
-import { seedUser } from "./helpers/seed";
+import { seedUser, seedLanguage } from "./helpers/seed";
 
 class App extends React.Component {
   constructor(props) {
@@ -24,7 +25,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
     auth().onAuthStateChanged(user => {
         this.setState({
           authenticated: !!user,
@@ -43,8 +43,8 @@ class App extends React.Component {
         
     });
 
-    this.getAppConfig();
-    
+    this.getAppConfig();    
+
   }
 
   getAppConfig = () => {
@@ -64,6 +64,7 @@ class App extends React.Component {
         <Switch>
           <PrivateRoute exact path="/" authenticated={authenticated} component={Quiz} />
           <PrivateRoute path="/quiz" authenticated={authenticated} component={Quiz} />
+          <PrivateRoute path="/game/:gameId" authenticated={authenticated} component={Game} />
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;

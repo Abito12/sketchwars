@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CircularIndeterminate() {
+export default function CircularIndeterminate({minHeight='100vh'}) {
   const classes = useStyles();
 
   return (
@@ -22,7 +22,7 @@ export default function CircularIndeterminate() {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: '100vh' }}
+        style={{ minHeight }}
     >
         <div className={classes.root}>
             <CircularProgress color="secondary" />
