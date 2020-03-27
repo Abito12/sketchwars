@@ -54,7 +54,9 @@ const useStyles = makeStyles((theme) => ({
       textAlign: "center"
   },
   option: {
-    textTransform: 'none'
+    textTransform: 'none',
+    width: '100%',
+    wordBreak: 'break-all'
   },
   flagButton: {
     marginTop: theme.spacing(2),
@@ -62,11 +64,13 @@ const useStyles = makeStyles((theme) => ({
   }  
 }));
 
+const setIntervalIds = [];
 
-export default function Game({ maxNumberOfQuestions=10 }) {
+export default function Game({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore}) {
   let { gameId } = useParams();
   const classes = useStyles();
 
+  const [counter, setCounter] = useState(null);
   const [questionIds, setQuestionIds] = useState([]);
   const [question, setQuestion] = useState({});
   const [questionNumber, setQuestionNumber] = useState(-1);
@@ -81,18 +85,25 @@ export default function Game({ maxNumberOfQuestions=10 }) {
     db.ref("games").child(gameId).once('value')
         .then(snapshot => {            
             const qids = snapshot.val().questions;                                
-            setQuestionIds(qids);   
-            setQuestionNumber(questionNumber + 1);         
+            setQuestionIds(qids);
+            const currentQIndex = qids.findIndex(q => {
+              if (!q.scores) return true;
+              return q.scores.every(score => score.playerId !== currentUserId);
+            });
+            setQuestionNumber(currentQIndex > -1 ? currentQIndex : 0);      
         })
         .catch(error => console.log(error));
-  }, [gameId]);  
+  }, [gameId]);
+
 
   useEffect(() => {
     if(questionIds.length <= 0 || questionNumber < 0) return;    
     const handleSetQuestion = () => {        
        db.ref("questionBank").child(questionIds[questionNumber].id).once('value')
-        .then(snapshot => {            
+        .then(snapshot => {          
             setQuestion(snapshot.val());
+            setCounter(null);
+            setCorrectOption(snapshot.val().answerId);
         })
         .catch(error => console.log(error));
     }    
@@ -108,10 +119,43 @@ export default function Game({ maxNumberOfQuestions=10 }) {
         setIsLoading(false);
     }
     handleSetOptions();
+    setQuestionEndTime();
   }, [question])
-    
 
-  
+  const setQuestionEndTime = () => {
+    const ref = db.ref(`games/${gameId}/questions`);
+    ref.once('value').then(snapshot => {
+      const questions = snapshot.val();
+      const currentQuestion = questions[questionNumber];
+
+      const {endTimes} = currentQuestion;
+
+      let endsAt;
+      if (endTimes && endTimes[currentUserId]) {
+        endsAt = endTimes[currentUserId];
+      } else {
+        endsAt = Date.now() + (roundTime * 1000) + 1000;
+        currentQuestion['endTimes'] = {
+          [currentUserId]: endsAt
+        }
+        ref.set(questions)
+      }
+
+      const timeout = setInterval(countDown, 1000);
+
+      setIntervalIds.push(timeout);
+
+      function countDown() {
+        const remainingTime = Math.round((endsAt - Date.now())/1000);
+        if (remainingTime <= 0) {
+          clearInterval(timeout);
+          handleScoreUpdate(0);
+        } else {
+          setCounter(remainingTime);
+        }
+      }
+    });
+  }
 
   const renderOptions = () => {   
     return options.map(opt => {
@@ -132,18 +176,44 @@ export default function Game({ maxNumberOfQuestions=10 }) {
   }
 
   const handleOptionClick = e => {
+    setIntervalIds.forEach(clearInterval);
     setOptionsActive(false);    
     const answerId = e.currentTarget.value;
     if(Number(answerId) === correctOption){
+      handleScoreUpdate(calculateScore());
       e.currentTarget.style.background = 'green';
     } else {
+      handleScoreUpdate(0);
       e.currentTarget.style.background = 'red';
     }
     e.currentTarget.style.color = 'white';
-    setTimeout(() => {       
-      handleGameStatus();
-    }, 1000);
   }
+
+
+  const calculateScore = () => {
+    if (counter >= 8)
+      return questionScore;
+    else 
+      return questionScore - (roundTime - counter) * 2;
+  }
+
+  const handleScoreUpdate = async (score) => {
+    console.log(questionNumber, score);
+    const ref = db.ref(`games/${gameId}/questions`);
+    ref.once('value').then(snapshot => {
+      const questions = snapshot.val();
+      const currentQuestion = questions[questionNumber];
+
+      const playerScore = {playerId: currentUserId, score};
+      if (currentQuestion.scores) {
+        if (currentQuestion.scores.every(sc => sc.playerId !== currentUserId))
+          currentQuestion.scores.push(playerScore);
+      } else {
+        currentQuestion.scores = [playerScore];
+      }
+      return ref.set(questions).then(handleGameStatus);
+    });
+  };
 
   const handleNextQuestion = () => {
     setQuestionNumber(questionNumber + 1);
@@ -159,9 +229,6 @@ export default function Game({ maxNumberOfQuestions=10 }) {
     }
 
   }
-
-
-
   
   return (
     <React.Fragment>
@@ -176,13 +243,14 @@ export default function Game({ maxNumberOfQuestions=10 }) {
       {isLoading ? <Loader minHeight={'50vh'}/> : 
         <main>
           <div className={classes.heroContent}>
-            <Container maxWidth="sm">            
+            <Container maxWidth="sm"> 
+            <p>{counter}</p>           
               <ProgressBar />
               <Typography variant="h6" align="center" color="textSecondary" paragraph>
                 {(question && !isEmptyObj(question)) ? decodeHtml(question.question) : "Question Placeholder"}
               </Typography>
               <div className={classes.heroButtons}>
-                <Grid container justify="space-around">
+                <Grid justify="space-around">
                   {options && renderOptions()}                          
                 </Grid>
                 <Grid container justify="center" className={classes.options}>

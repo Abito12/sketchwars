@@ -41,16 +41,22 @@ class App extends React.Component {
         
     });
 
-    this.getAppConfig();    
+    const appConfig = localStorage.getItem('appConfig');
 
+    if (appConfig) {
+      this.setState({...JSON.parse(appConfig)});
+    } else {
+      this.getAppConfig();
+    }
   }
 
   getAppConfig = () => {
     db.ref("appConfig").once('value').then(snapshot => {
       const values = Object.values(snapshot.val()).pop();
       this.setState({        
-        ...values,        
-      }, () => console.log(this.state));
+        ...values      
+      });
+      localStorage.setItem('appConfig', JSON.stringify(values));
     });
   }
 
@@ -62,6 +68,7 @@ class App extends React.Component {
         <Switch>
           <PrivateRoute exact path="/" {...this.state} component={Quiz} />
           <PrivateRoute path="/quiz" {...this.state} component={Quiz} />
+          <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;
