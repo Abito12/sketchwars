@@ -28,14 +28,12 @@ class App extends React.Component {
     auth().onAuthStateChanged(user => {
         this.setState({
           authenticated: !!user,
-          loading: false          
+          loading: false,
+          currentUserId: (user && user.uid) || ''        
         });
-        if(user){          
+        if(user) {          
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
-            if (snapshot.exists()){
-              const userData = snapshot.val();
-              console.log("exists!", userData);
-            } else {
+            if (!snapshot.exists()){
               seedUser("users", user);        
             }
           });            
@@ -43,16 +41,22 @@ class App extends React.Component {
         
     });
 
-    this.getAppConfig();    
+    const appConfig = localStorage.getItem('appConfig');
 
+    if (appConfig) {
+      this.setState({...JSON.parse(appConfig)});
+    } else {
+      this.getAppConfig();
+    }
   }
 
   getAppConfig = () => {
     db.ref("appConfig").once('value').then(snapshot => {
       const values = Object.values(snapshot.val()).pop();
       this.setState({        
-        ...values,        
-      }, () => console.log(this.state));
+        ...values      
+      });
+      localStorage.setItem('appConfig', JSON.stringify(values));
     });
   }
 
@@ -62,9 +66,9 @@ class App extends React.Component {
       <Loader /> : 
       <Router>
         <Switch>
-          <PrivateRoute exact path="/" authenticated={authenticated} component={Quiz} />
-          <PrivateRoute path="/quiz" authenticated={authenticated} component={Quiz} />
-          <PrivateRoute path="/game/:gameId" authenticated={authenticated} component={Game} />
+          <PrivateRoute exact path="/" {...this.state} component={Quiz} />
+          <PrivateRoute path="/quiz" {...this.state} component={Quiz} />
+          <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;
