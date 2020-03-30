@@ -9,7 +9,8 @@ import Game from "./components/Game";
 import Loader from './templates/Loader';
 
 import { db } from "./services/firebase";
-import { seedUser, seedLanguage } from "./helpers/seed";
+import { seedUser } from "./helpers/seed";
+import { getInitials } from "./helpers/utilities";
 
 class App extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class App extends React.Component {
       roundTime: 10,
       numQuestions: 10,
       questionScore: 20,
+      initials: "--",
       theme: "light"
     };
   }
@@ -29,7 +31,8 @@ class App extends React.Component {
         this.setState({
           authenticated: !!user,
           loading: false,
-          currentUserId: (user && user.uid) || ''        
+          currentUserId: (user && user.uid) || '',
+          initials: (user && user.displayName) ? getInitials(user.displayName) : this.state.initials       
         });
         if(user) {          
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
@@ -68,7 +71,7 @@ class App extends React.Component {
         <Switch>
           <PrivateRoute exact path="/" {...this.state} component={Quiz} />
           <PrivateRoute path="/quiz" {...this.state} component={Quiz} />
-          <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />
+          <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />          
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;
