@@ -8,6 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import withRoot from '../helpers/withRoot';
 import Copyright from "../templates/CopyRight";
 import { db } from "../services/firebase";
 
@@ -16,8 +17,8 @@ const style = theme => ({
     marginRight: theme.spacing(2)
   },
   heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6)
+    padding: theme.spacing(8, 0, 6),
+    color: theme.palette.common.text
   },
   heroButtons: {
     marginTop: theme.spacing(4)
@@ -38,8 +39,8 @@ const style = theme => ({
     flexGrow: 1
   },
   footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6)
+    padding: theme.spacing(6),
+    color: theme.palette.common.text
   }
 });
 
@@ -105,7 +106,7 @@ class QuizComponent extends Component {
         <CssBaseline />
         <AppBar position="relative">
           <Toolbar>
-            <Typography variant="h6" color="inherit" noWrap>
+            <Typography variant="h6" color="text" noWrap>
               Home
             </Typography>
           </Toolbar>
@@ -117,7 +118,6 @@ class QuizComponent extends Component {
                 component="h2"
                 variant="h3"
                 align="center"
-                color="textPrimary"
                 gutterBottom
               >
                 Description
@@ -125,7 +125,6 @@ class QuizComponent extends Component {
               <Typography
                 variant="h6"
                 align="center"
-                color="textSecondary"
                 paragraph
               >
                 Something short and leading about the collection below—its
@@ -137,14 +136,14 @@ class QuizComponent extends Component {
                   <Grid item>
                     <Button
                       variant="contained"
-                      color="primary"
+                      color="secondary"
                       onClick={this.handleInvitationClick}
                     >
                       Invite Friend
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button variant="outlined" color="primary">
+                    <Button variant="outlined" color="secondary">
                       Play against bot
                     </Button>
                   </Grid>
@@ -160,7 +159,6 @@ class QuizComponent extends Component {
           <Typography
             variant="subtitle1"
             align="center"
-            color="textSecondary"
             component="p"
           >
             Something here to give the footer a purpose!
@@ -172,4 +170,4 @@ class QuizComponent extends Component {
   }
 }
 
-export default withStyles(style)(QuizComponent);
+export default withRoot(withStyles(style)(QuizComponent));
