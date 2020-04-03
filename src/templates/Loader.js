@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import withRoot from '../helpers/withRoot';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CircularIndeterminate({minHeight='100vh'}) {
+function CircularIndeterminate({minHeight='100vh'}) {
   const classes = useStyles();
 
   return (
@@ -30,3 +31,5 @@ export default function CircularIndeterminate({minHeight='100vh'}) {
     </Grid>
   );
 }
+
+export default withRoot(CircularIndeterminate);

@@ -20,7 +20,10 @@ export const lightTheme = createMuiTheme({
       background: {
         default: "#202849"
       }
-    }
+    },
+    typography: {
+      fontFamily: ['Montserrat', 'sans-serif'].join()
+     }
   });
 
   export const darkTheme = createMuiTheme({
@@ -31,7 +34,7 @@ export const lightTheme = createMuiTheme({
           grey: '#7e86ae'
         },
         primary: {        
-          main: '#202849',
+          main: '#1B0B35',
           dark: '#121936',
           light: '#4C5477'
         },
@@ -41,7 +44,10 @@ export const lightTheme = createMuiTheme({
           light: '#4A9EE9'
         },
       background: {
-        default: "#202849"
+        default: "#1B0B35"
       }
-    }
+    },
+    typography: {
+      fontFamily: ['Montserrat', 'sans-serif'].join()
+     }
   });

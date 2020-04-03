@@ -9,8 +9,9 @@ import Game from "./components/Game";
 import Loader from './templates/Loader';
 
 import { db } from "./services/firebase";
-import { seedUser } from "./helpers/seed";
+import { seedUser, seedCategory, testSeeder} from "./helpers/seed";
 import { getInitials } from "./helpers/utilities";
+import StarWars from './templates/StarWars';
 
 class App extends React.Component {
   constructor(props) {
@@ -41,7 +42,6 @@ class App extends React.Component {
             }
           });            
         }
-        
     });
 
     const appConfig = localStorage.getItem('appConfig');
@@ -71,7 +71,8 @@ class App extends React.Component {
         <Switch>
           <PrivateRoute exact path="/" {...this.state} component={Quiz} />
           <PrivateRoute path="/quiz" {...this.state} component={Quiz} />
-          <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />          
+          <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />
+          <PrivateRoute path="/starwars/:gameId" {...this.state} authenticated={authenticated} component={StarWars} />    
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;
