@@ -15,12 +15,11 @@ import CopyRight from '../templates/CopyRight';
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+    background: theme.palette.primary.main
   },
   image: {
     backgroundImage: 'url(https://wallpaperaccess.com/full/27839.jpg)',
     backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },

@@ -27,3 +27,4 @@ export const getInitials = (sen) => {
     return sen.split(" ").map(w => w[0]).join("");
 }
 
+

@@ -8,9 +8,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import withRoot from '../helpers/withRoot';
+import withRoot from "../helpers/withRoot";
 import Copyright from "../templates/CopyRight";
 import { db } from "../services/firebase";
+import CategoryListView from "../templates/Categories";
+import BottomNavigation from "../templates/BottomNavigationBar";
+import Loader from "../templates/Loader";
 
 const style = theme => ({
   icon: {
@@ -48,16 +51,39 @@ class QuizComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirectURL: null
+      redirectURL: null,
+      categories: [],
+      isLoading: true
     };
   }
 
+  componentDidMount() {
+    db.ref("questionBank")
+      .orderByChild("name")
+      .once("value")
+      .then(snapshot => {
+        const snapshotVal = snapshot.val();
+        const categories = [];
+
+        Object.keys(snapshotVal).forEach(key => {
+          categories.push({
+            name: snapshotVal[key].name,
+            id: key
+          });
+        });
+
+        this.setState({
+          categories,
+          isLoading: false
+        });
+      });
+  }
 
   getRandomIndex = arr => Math.floor(Math.random() * arr.length);
 
-  fetchQuestions = async () => {
+  fetchQuestions = async (categoryId) => {
     const { numQuestions } = this.props;
-    const questionsRef = db.ref("questionBank");
+    const questionsRef = db.ref("questionBank/" + categoryId);
     const snapshot = await questionsRef.once("value");
     const snapshotVal = snapshot.val();
     const questionBank = [];
@@ -77,9 +103,13 @@ class QuizComponent extends Component {
     return questions;
   };
 
-  handleInvitationClick = async () => {
+  handleInvitationClick = async categoryId => {
     const { currentUserId } = this.props;
-    const questions = await this.fetchQuestions();
+    const {categories} = this.state;
+
+    const catId = categoryId || categories[Math.floor(Math.random * categories.length)].id;
+
+    const questions = await this.fetchQuestions(catId);
 
     const initialGameData = {
       playerOneId: currentUserId,
@@ -91,14 +121,14 @@ class QuizComponent extends Component {
     db.ref("games")
       .push(initialGameData)
       .then(docRef => {
-        console.log(docRef.id);
-        this.setState({ redirectURL: "/game/" + docRef.key });
+        this.setState({ redirectURL: "/starwars/" + docRef.key });
       });
   };
 
   render() {
     const { classes } = this.props;
-    const { redirectURL } = this.state;
+    const { redirectURL, categories, isLoading } = this.state;
+
     return redirectURL ? (
       <Redirect to={redirectURL} />
     ) : (
@@ -122,14 +152,8 @@ class QuizComponent extends Component {
               >
                 Description
               </Typography>
-              <Typography
-                variant="h6"
-                align="center"
-                paragraph
-              >
-                Something short and leading about the collection below—its
-                contents, the creator, etc. Make it short and sweet, but not too
-                short so folks don&apos;t simply skip over it entirely.
+              <Typography variant="subtitle2" align="center" paragraph>
+                Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum
               </Typography>
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
@@ -137,14 +161,14 @@ class QuizComponent extends Component {
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={this.handleInvitationClick}
+                      onClick={() => this.handleInvitationClick()}
                     >
-                      Invite Friend
+                      Play with a friend
                     </Button>
                   </Grid>
                   <Grid item>
                     <Button variant="outlined" color="secondary">
-                      Play against bot
+                      Find random opponent
                     </Button>
                   </Grid>
                 </Grid>
@@ -152,19 +176,21 @@ class QuizComponent extends Component {
             </Container>
           </div>
         </main>
+        {isLoading ? (
+          <Loader minHeight={"50vh"} />
+        ) : (
+          <CategoryListView handleInvitationClick={this.handleInvitationClick} categories={categories} />
+        )}
         <footer className={classes.footer}>
           <Typography variant="h6" align="center" gutterBottom>
             Lorem Ipsum
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            component="p"
-          >
+          <Typography variant="subtitle1" align="center" component="p">
             Something here to give the footer a purpose!
           </Typography>
           <Copyright />
         </footer>
+        <BottomNavigation />
       </React.Fragment>
     );
   }
