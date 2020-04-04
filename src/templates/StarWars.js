@@ -316,39 +316,55 @@ const StarWars = () => {
                 </Button>
             </div>
             <div style={{display: 'flex', flexDirection: 'row', marginTop: '16px', justifyContent: 'space-around'}}>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${gameUrl}`} target="_blank" rel="noopener noreferrer"> 
                 <Button
                   variant="outlined"
                   color="secondary"
                   style={{border: 'none'}}
                 >
-                  <FacebookIcon style={{ color: '#3b5998' }} fontSize="large" />
+                                   
+                    <FacebookIcon style={{ color: '#3b5998' }} fontSize="large" />
+                  
                 </Button>
+                </a>
+                <a href={`https://api.whatsapp.com/send?text=Hi, Play with me on Quizup! Click here: ${gameUrl}`} target="_blank" rel="noopener noreferrer">                    
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{border: 'none'}}
+                >                  
+                      <WhatsAppIcon style={{ color: '#128C7E' }} fontSize="large" />                                    
+                </Button>
+                </a>
+                <a href={`http://www.reddit.com/submit?url=${gameUrl}&title=Play with me on Quizup. Click on the URL`} target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{border: 'none'}}
+                >                  
+                    <RedditIcon style={{ color: '#FF4301' }} fontSize="large" />                  
+                </Button>
+                </a>
+                <a href="mailto:friend@site.com?subject=I challenge you to a game of quizup" rel="noopener noreferrer">
                 <Button
                   variant="outlined"
                   color="secondary"
                   style={{border: 'none'}}
                 >
-                  <WhatsAppIcon style={{ color: '#128C7E' }} fontSize="large" />
+                  
+                    <EmailIcon style={{ color: '#E2E2E2' }} fontSize="large" />                  
                 </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{border: 'none'}}
-                >
-                  <RedditIcon style={{ color: '#FF4301' }} fontSize="large" />
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{border: 'none'}}
-                >
-                  <EmailIcon style={{ color: '#E2E2E2' }} fontSize="large" />
-                </Button>
+                </a>
             </div>
         </div>
         
     </>
   );
 };
+
+
+            
+            
+        
 
 export default withRoot(StarWars);
