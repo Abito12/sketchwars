@@ -1,5 +1,6 @@
 import React, {useEffect, useState}from "react";
 import {useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
@@ -287,15 +288,17 @@ const StarWars = () => {
         <div lg={12} style={{display: 'flex', flexDirection: 'column', padding: '12px', justifyContent: 'center',
           alignItems: 'center'
         }}>
+          <Link to={`/game/${gameId}`} style={{textDecoration: 'none'}}>
             <Button
               variant="contained"
               color="secondary"
               style={{maxWidth: '400px', marginBottom: '16px'}}
             >
-              Play now</Button>
+              Play now
+              </Button>
+            </Link>
             <div style={{display: 'flex', flexDirection: 'row'}}>
                 <Button
-                  variant="contained"
                   color="secondary"
                   variant="outlined"
                   size='small'

@@ -7,6 +7,7 @@
 	margin-top: 20px;
 	max-height: 360px;
 }
+
 .page-content {
 	position: relative;
 	width: 540px;
@@ -27,6 +28,7 @@
 	grid-area: 1 / 1 / 1 / 1;
 	border: 20px solid #18082f;
 	border-radius: 50%;
+	animation: clipMe 8s linear infinite;
 }
 .page-content > .dark-bg {
 	background: #451868;

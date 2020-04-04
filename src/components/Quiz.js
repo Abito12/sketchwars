@@ -115,7 +115,8 @@ class QuizComponent extends Component {
       playerOneId: currentUserId,
       creationTime: Date.now(),
       expired: false,
-      questions: questions.map(({ id }) => ({ id }))
+      questions: questions.map(({ id }) => ({ id })),
+      categoryId: catId
     };
 
     db.ref("games")

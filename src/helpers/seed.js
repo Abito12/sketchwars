@@ -10,7 +10,7 @@ export const seedUser = (collection, user) => {
     email: user.email,
     name: user.displayName || user.email,
     streak: 0,
-    prefferedLanguageId: "en"
+    prefferedLanguageId: "en",
   });
 };
 
@@ -19,43 +19,95 @@ export const seedAppConfig = (collection = "appConfig") => {
     roundTime: 10,
     theme: "light",
     numQuestions: 10,
-    questionScore: 20
+    questionScore: 20,
   });
 };
 
 export const seedCategory = (collection = "categories", cats) => {
-  cats.map(c => {
+  cats.map((c) => {
     return db.ref(collection).push({
-      name: c
+      name: c,
     });
   });
 };
 
 export const seedLanguage = (collection = "languages", langs) => {
-  langs.map(c => {
+  langs.map((c) => {
     return db.ref(collection).push({
-      name: c
+      name: c,
     });
   });
 };
 
 export const seedQuestions = (collection = "questionBank", questions) => {
-  questions.map(c => {
+  questions.map((c) => {
     return db.ref(collection).push(c);
   });
 };
 
 const questions = [
   {
-    question:
-      "At which bridge does the annual Oxford and Cambridge boat race start?",
+    question: "Which of the following sports is not part of the triathlon?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Hammersmith", "Vauxhall ", "Battersea", "Putney"],
+    choices: [
+      { id: 0, text: "Cycling" },
+      { id: 1, text: "Swimming" },
+      { id: 2, text: "Running" },
+      { id: 3, text: "Horse-Riding" },
+    ],
+    difficulty: "easy",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question:
+      "How many times did Martina Navratilova win the Wimbledon Singles Championship?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Ten" },
+      { id: 1, text: "Seven" },
+      { id: 2, text: "Eight" },
+      { id: 3, text: "Nine" },
+    ],
+    difficulty: "hard",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question:
+      "With which team did Michael Schumacher make his Formula One debut at the 1991 Belgian Grand Prix?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Benetton" },
+      { id: 1, text: "Ferrari" },
+      { id: 2, text: "Mercedes" },
+      { id: 3, text: "Jordan" },
+    ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question:
+      "Which German sportswear company&#039;s logo is the &#039;Formstripe&#039;?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Nike" },
+      { id: 1, text: "Adidas" },
+      { id: 2, text: "Reebok" },
+      { id: 3, text: "Puma" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question:
@@ -63,10 +115,15 @@ const questions = [
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Giant Haystacks", "Kendo Nagasaki", "Masambula", "Big Daddy"],
+    choices: [
+      { id: 0, text: "Giant Haystacks" },
+      { id: 1, text: "Kendo Nagasaki" },
+      { id: 2, text: "Masambula" },
+      { id: 3, text: "Big Daddy" },
+    ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
@@ -75,91 +132,89 @@ const questions = [
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Northampton Town",
-      "Bradford City",
-      "West Bromwich Albion",
-      "Leicester City"
+      { id: 0, text: "Northampton Town" },
+      { id: 1, text: "Bradford City" },
+      { id: 2, text: "West Bromwich Albion" },
+      { id: 3, text: "Leicester City" },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question:
-      "How many soccer players should be on the field at the same time?",
+    question: "Which team won the 2015-16 English Premier League?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["20", "24", "26", "22"],
+    choices: [
+      { id: 0, text: "Liverpool" },
+      { id: 1, text: "Cheslea" },
+      { id: 2, text: "Manchester United" },
+      { id: 3, text: "Leicester City" },
+    ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question: "Manchester United won the 2013-14 English Premier League.",
+    question: "A stimpmeter measures the speed of a ball over what surface?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["True", "False"],
-    difficulty: "easy",
+    choices: [
+      { id: 0, text: " Football Pitch" },
+      { id: 1, text: "Cricket Outfield" },
+      { id: 2, text: "Pinball Table" },
+      { id: 3, text: "Golf Putting Green" },
+    ],
+    difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "How many scoring zones are there on a conventional dart board?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["62", "42", "102", "82"],
+    choices: [
+      { id: 0, text: "62" },
+      { id: 1, text: "42" },
+      { id: 2, text: "102" },
+      { id: 3, text: "82" },
+    ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question: "With which doubles partner did John McEnroe have most success?",
+    question: "In a game of snooker, what colour ball is worth 3 points?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Mark Woodforde",
-      "Michael Stich",
-      "Mary Carillo",
-      "Peter Fleming"
+      { id: 0, text: "Yellow" },
+      { id: 1, text: "Brown" },
+      { id: 2, text: "Blue" },
+      { id: 3, text: "Green" },
     ],
-    difficulty: "hard",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "In baseball, how many fouls are an out?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["5", "3", "2", "0"],
-    difficulty: "easy",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question:
-      "Soccer player Cristiano Ronaldo opened a museum dedicated to himself.",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["False", "True"],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "Which nation hosted the FIFA World Cup in 2006?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["United Kingdom", "Brazil", "South Africa", "Germany"],
+    choices: [
+      { id: 0, text: "United Kingdom" },
+      { id: 1, text: "Brazil" },
+      { id: 2, text: "South Africa" },
+      { id: 3, text: "Germany" },
+    ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "The F1 season of 1994 is remembered for what tragic event?",
@@ -167,24 +222,60 @@ const questions = [
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "The Showdown (Australia)",
-      "Verstappen on Fire (Germany)",
-      "Schumacher&#039;s Ban (Britain)",
-      "Death of Ayrton Senna (San Marino)"
+      { id: 0, text: "The Showdown (Australia)" },
+      { id: 1, text: "Verstappen on Fire (Germany)" },
+      { id: 2, text: "Schumacher&#039;s Ban (Britain)" },
+      { id: 3, text: "Death of Ayrton Senna (San Marino)" },
     ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question: "Peyton Manning retired after winning Super Bowl XLIX.",
+    question:
+      "The Rio 2016 Summer Olympics held it&#039;s closing ceremony on what date?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["True", "False"],
+    choices: [
+      { id: 0, text: "August 23" },
+      { id: 1, text: "August 19" },
+      { id: 2, text: "August 17" },
+      { id: 3, text: "August 21" },
+    ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question: "Which country will host the 2020 Summer Olympics?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "China" },
+      { id: 1, text: "Australia" },
+      { id: 2, text: "Germany" },
+      { id: 3, text: "Japan" },
+    ],
+    difficulty: "easy",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question: "Which country is hosting the 2022 FIFA World Cup?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Uganda" },
+      { id: 1, text: "Vietnam" },
+      { id: 2, text: "Bolivia" },
+      { id: 3, text: "Qatar" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question: "Who won the 2015 Formula 1 World Championship?",
@@ -192,116 +283,77 @@ const questions = [
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Nico Rosberg",
-      "Sebastian Vettel",
-      "Jenson Button",
-      "Lewis Hamilton"
+      { id: 0, text: "Nico Rosberg" },
+      { id: 1, text: "Sebastian Vettel" },
+      { id: 2, text: "Jenson Button" },
+      { id: 3, text: "Lewis Hamilton" },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
-      "Skateboarding will be included in the 2020 Summer Olympics in Tokyo.",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["False", "True"],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "Tennis was once known as Racquetball.",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["True", "False"],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "Which team was the 2015-2016 NBA Champions?",
+      "Which driver has been the Formula 1 world champion for a record 7 times?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Golden State Warriors",
-      "Toronto Raptors",
-      "Oklahoma City Thunders",
-      "Cleveland Cavaliers"
+      { id: 0, text: "Ayrton Senna" },
+      { id: 1, text: "Fernando Alonso" },
+      { id: 2, text: "Jim Clark" },
+      { id: 3, text: "Michael Schumacher" },
     ],
-    difficulty: "medium",
+    difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "Which team was the 2014-2015 NBA Champions?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: [
-      "Cleveland Cavaliers",
-      "Houston Rockets",
-      "Atlanta Hawks",
-      "Golden State Warriors"
-    ],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "Where was the Games of the XXII Olympiad held?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Barcelona", "Tokyo", "Los Angeles", "Moscow"],
+    choices: [
+      { id: 0, text: "Barcelona" },
+      { id: 1, text: "Tokyo" },
+      { id: 2, text: "Los Angeles" },
+      { id: 3, text: "Moscow" },
+    ],
     difficulty: "hard",
     flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "Josh Mansour is part of what NRL team?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: [
-      "Melbourne Storm",
-      "Sydney Roosters",
-      "North Queensland Cowboys",
-      "Penrith Panthers"
-    ],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "Which car manufacturer won the 2016 24 Hours of Le Mans?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["Toyota", "Audi", "Ferrari", "Porsche"],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
-      "Which male player won the gold medal of table tennis singles in 2016 Olympics Games?",
+      "Which car company is the only Japanese company which won the 24 Hours of Le Mans?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Zhang Jike (China)",
-      "Jun Mizutani (Japan)",
-      "Vladimir Samsonov (Belarus)",
-      "Ma Long (China)"
+      { id: 0, text: "Toyota" },
+      { id: 1, text: "Subaru" },
+      { id: 2, text: "Nissan" },
+      { id: 3, text: "Mazda" },
     ],
     difficulty: "hard",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question:
+      "Which Italian footballer told Neuer where he&#039;s putting his shot and dragging it wide, during the match Italy-Germany, UEFA EURO 2016?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Insigne" },
+      { id: 1, text: "Barzagli" },
+      { id: 2, text: "Giaccherini" },
+      { id: 3, text: "Pelle" },
+    ],
+    difficulty: "hard",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question:
@@ -309,21 +361,45 @@ const questions = [
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Argentina", "Brazil", "Paraguay", "Chile"],
+    choices: [
+      { id: 0, text: "Argentina" },
+      { id: 1, text: "Brazil" },
+      { id: 2, text: "Paraguay" },
+      { id: 3, text: "Chile" },
+    ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question:
-      "What national team won the 2016 edition of UEFA European Championship?",
+    question: "Which team won 2014 FIFA World Cup in Brazil?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["France", "Germany", "England", "Portugal"],
-    difficulty: "medium",
+    choices: [
+      { id: 0, text: "Argentina" },
+      { id: 1, text: "Brazil" },
+      { id: 2, text: "Netherlands" },
+      { id: 3, text: "Germany" },
+    ],
+    difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question: "How many points did LeBron James score in his first NBA game?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "19" },
+      { id: 1, text: "69" },
+      { id: 2, text: "41" },
+      { id: 3, text: "25" },
+    ],
+    difficulty: "easy",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question:
@@ -331,97 +407,109 @@ const questions = [
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["1", "2", "3", "4"],
+    choices: [
+      { id: 0, text: "1" },
+      { id: 1, text: "2" },
+      { id: 2, text: "3" },
+      { id: 3, text: "4" },
+    ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
-      "Which city did the former NHL team &quot;The Nordiques&quot; originiate from?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["Houston", "Montreal", "New York", "Quebec City"],
-    difficulty: "easy",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "What team won the 2016 MLS Cup?",
+      "Which of the following Grand Slam tennis tournaments occurs LAST?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Colorado Rapids",
-      "Toronto FC",
-      "Montreal Impact",
-      "Seattle Sounders"
-    ],
-    difficulty: "easy",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "What is the oldest team in the NFL?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: [
-      "Chicago Bears",
-      "Green Bay Packers",
-      "New York Giants",
-      "Arizona Cardinals"
+      { id: 0, text: "French Open" },
+      { id: 1, text: "Wimbledon" },
+      { id: 2, text: "Australian Open" },
+      { id: 3, text: "US Open" },
     ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "What year did the New Orleans Saints win the Super Bowl?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["2008", "2010", "2011", "2009"],
+    choices: [
+      { id: 0, text: "2008" },
+      { id: 1, text: "2010" },
+      { id: 2, text: "2011" },
+      { id: 3, text: "2009" },
+    ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
-      "What is the full name of the footballer &quot;Cristiano Ronaldo&quot;?",
+      "What is the exact length of one non-curved part in Lane 1 of an Olympic Track?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Cristiano Ronaldo los Santos Diego",
-      "Cristiano Armando Diego Ronaldo",
-      "Cristiano Luis Armando Ronaldo",
-      "Cristiano Ronaldo dos Santos Aveiro"
+      { id: 0, text: "100m" },
+      { id: 1, text: "100yd" },
+      { id: 2, text: "109.36yd" },
+      { id: 3, text: "84.39m" },
     ],
-    difficulty: "hard",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "What year was hockey legend Wayne Gretzky born?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["1965", "1959", "1963", "1961"],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question: "Which year was the third Super Bowl held?",
+    question: "Which team has won the most Stanley Cups in the NHL?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["1968", "1971", "1970", "1969"],
-    difficulty: "hard",
+    choices: [
+      { id: 0, text: "Chicago Blackhawks" },
+      { id: 1, text: "Toronto Maple Leafs" },
+      { id: 2, text: "Detroit Red Wings" },
+      { id: 3, text: "Montreal Canadians" },
+    ],
+    difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question:
+      "Which portuguese island is soccer player Cristiano Ronaldo from?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Terceira" },
+      { id: 1, text: "Santa Maria" },
+      { id: 2, text: "Porto Santo" },
+      { id: 3, text: "Madeira" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question:
+      "Who won the 2015 College Football Playoff (CFP) National Championship? ",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Alabama Crimson Tide" },
+      { id: 1, text: "Clemson Tigers" },
+      { id: 2, text: "Wisconsin Badgers" },
+      { id: 3, text: "Ohio State Buckeyes" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question:
@@ -429,47 +517,108 @@ const questions = [
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Jacob deGrom", "Shelby Miller", "Matt Harvey", "Jose Fernandez"],
+    choices: [
+      { id: 0, text: "Jacob deGrom" },
+      { id: 1, text: "Shelby Miller" },
+      { id: 2, text: "Matt Harvey" },
+      { id: 3, text: "Jose Fernandez" },
+    ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question: "When was the first official international game played?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["1880", "1863", "1865", "1872"],
-    difficulty: "easy",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question:
-      "Which boxer was banned for taking a bite out of Evander Holyfield&#039;s ear in 1997?",
+    question: "Why was The Green Monster at Fenway Park was originally built?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Roy Jones Jr.",
-      "Evander Holyfield",
-      "Lennox Lewis",
-      "Mike Tyson"
+      { id: 0, text: "To make getting home runs harder." },
+      { id: 1, text: "To display advertisements." },
+      { id: 2, text: "To provide extra seating." },
+      { id: 3, text: "To prevent viewing games from outside the park." },
     ],
-    difficulty: "easy",
+    difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
-      "What is the most common type of pitch thrown by pitchers in baseball?",
+      "Which sport is NOT traditionally played during the Mongolian Naadam festival?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Slowball", "Screwball", "Palmball", "Fastball"],
-    difficulty: "easy",
+    choices: [
+      { id: 0, text: "Wrestling" },
+      { id: 1, text: "Archery" },
+      { id: 2, text: "Horse-Racing" },
+      { id: 3, text: "American Football" },
+    ],
+    difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question: "Which car manufacturer won the 2017 24 Hours of Le Mans?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Toyota" },
+      { id: 1, text: "Audi" },
+      { id: 2, text: "Chevrolet" },
+      { id: 3, text: "Porsche" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question:
+      "Which NBA player won Most Valuable Player for the 1999-2000 season?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Allen Iverson" },
+      { id: 1, text: "Kobe Bryant" },
+      { id: 2, text: "Paul Pierce" },
+      { id: 3, text: "Shaquille O&#039;Neal" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question: "In what sport does Fanny Chmelar compete for Germany?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Swimming" },
+      { id: 1, text: "Showjumping" },
+      { id: 2, text: "Gymnastics" },
+      { id: 3, text: "Skiing" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question:
+      "What team did England beat in the semi-final stage to win in the 1966 World Cup final?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "West Germany" },
+      { id: 1, text: "Soviet Union" },
+      { id: 2, text: "Brazil" },
+      { id: 3, text: "Portugal" },
+    ],
+    difficulty: "hard",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question:
@@ -477,62 +626,77 @@ const questions = [
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Flamingo", "Birdie", "Eagle", "Turkey"],
-    difficulty: "easy",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question:
-      "Which African American is in part responsible for integrating  Major League baseball?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
     choices: [
-      "Curt Flood",
-      "Roy Campanella",
-      "Satchell Paige",
-      "Jackie Robinson"
+      { id: 0, text: "Flamingo" },
+      { id: 1, text: "Birdie" },
+      { id: 2, text: "Eagle" },
+      { id: 3, text: "Turkey" },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question:
-      "Which player &quot;kung-fu kicked&quot; a Crystal Palace fan in January 1995?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: ["David Seamen", "Ashley Cole", "Mark Hughes", "Eric Cantona"],
-    difficulty: "hard",
-    flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question: "Who is Manchester United&#039;s top premier league goal scorer?",
+    question: "How many French Open&#039;s did Bj&ouml;rn Borg win?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Sir Bobby Charlton",
-      "Ryan Giggs",
-      "David Beckham",
-      "Wayne Rooney"
+      { id: 0, text: "4" },
+      { id: 1, text: "9" },
+      { id: 2, text: "2" },
+      { id: 3, text: "6" },
     ],
     difficulty: "medium",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
+  },
+  {
+    question:
+      "Who is often called &quot;the Maestro&quot; in the men&#039;s tennis circuit?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "Bill Tilden" },
+      { id: 1, text: "Boris Becker" },
+      { id: 2, text: "Pete Sampras" },
+      { id: 3, text: "Roger Federer" },
+    ],
+    difficulty: "easy",
+    flagCount: 0,
+    category: "Sports",
+  },
+  {
+    question:
+      "How many premier league trophies did Sir Alex Ferguson win during his time at Manchester United?",
+    answerId: 3,
+    answeredCount: 0,
+    askedCount: 0,
+    choices: [
+      { id: 0, text: "11" },
+      { id: 1, text: "20" },
+      { id: 2, text: "22" },
+      { id: 3, text: "13" },
+    ],
+    difficulty: "medium",
+    flagCount: 0,
+    category: "Sports",
   },
   {
     question: "Who is Manchester United&#039;s leading appearance maker?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["David Beckham", "Wayne Rooney", "Eric Cantona", "Ryan Giggs"],
+    choices: [
+      { id: 0, text: "David Beckham" },
+      { id: 1, text: "Wayne Rooney" },
+      { id: 2, text: "Eric Cantona" },
+      { id: 3, text: "Ryan Giggs" },
+    ],
     difficulty: "hard",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
@@ -540,37 +704,45 @@ const questions = [
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Tottenham Hotspur", "Watford", "Stoke City", "Leicester City"],
+    choices: [
+      { id: 0, text: "Tottenham Hotspur" },
+      { id: 1, text: "Watford" },
+      { id: 2, text: "Stoke City" },
+      { id: 3, text: "Leicester City" },
+    ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question:
-      "Which of the following player scored a hat-trick during their Manchester United debut?",
+    question: "When was the FC Schalke 04 founded?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Cristiano Ronaldo",
-      "Robin Van Persie",
-      "David Beckham",
-      "Wayne Rooney"
+      { id: 0, text: "1909" },
+      { id: 1, text: "2008" },
+      { id: 2, text: "1999" },
+      { id: 3, text: "1904" },
     ],
-    difficulty: "medium",
+    difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question:
-      "Which professional wrestler fell from the rafters to his death during a live Pay-Per-View event in 1999?",
+    question: "Who did Steven Gerrard win the Champions League with?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["Chris Benoit", "Lex Luger", "Al Snow", "Owen Hart"],
-    difficulty: "medium",
+    choices: [
+      { id: 0, text: "Real Madrid" },
+      { id: 1, text: "Chelsea" },
+      { id: 2, text: "Man City" },
+      { id: 3, text: "Liverpool" },
+    ],
+    difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question:
@@ -579,24 +751,29 @@ const questions = [
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Barcelona FC",
-      "Paris Saints-Germain",
-      "Manchester United",
-      "Sunderland FC"
+      { id: 0, text: "Barcelona FC" },
+      { id: 1, text: "Paris Saints-Germain" },
+      { id: 2, text: "Manchester United" },
+      { id: 3, text: "Sunderland FC" },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "Which country will host the 2022 FIFA World Cup?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
-    choices: ["USA", "Japan", "Switzerland", "Qatar"],
+    choices: [
+      { id: 0, text: "USA" },
+      { id: 1, text: "Japan" },
+      { id: 2, text: "Switzerland" },
+      { id: 3, text: "Qatar" },
+    ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "Who won the 2017 Formula One World Drivers&#039; Championship?",
@@ -604,30 +781,14 @@ const questions = [
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Sebastian Vettel",
-      "Nico Rosberg",
-      "Max Verstappen",
-      "Lewis Hamilton"
+      { id: 0, text: "Sebastian Vettel" },
+      { id: 1, text: "Nico Rosberg" },
+      { id: 2, text: "Max Verstappen" },
+      { id: 3, text: "Lewis Hamilton" },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
-  },
-  {
-    question:
-      "Which Formula 1 driver switched teams in the middle of the 2017 season?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: [
-      "Daniil Kvyat",
-      "Jolyon Palmer",
-      "Rio Haryanto",
-      "Carlos Sainz Jr."
-    ],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
     question: "Who won the UEFA Champions League in 2017?",
@@ -635,69 +796,36 @@ const questions = [
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "Atletico Madrid",
-      "AS Monaco FC",
-      "Juventus F.C.",
-      "Real Madrid C.F."
+      { id: 0, text: "Atletico Madrid" },
+      { id: 1, text: "AS Monaco FC" },
+      { id: 2, text: "Juventus F.C." },
+      { id: 3, text: "Real Madrid C.F." },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
   {
-    question: "Who won the UEFA Champions League in 2016?",
+    question: "Which two teams played in Super Bowl XLII?",
     answerId: 3,
     answeredCount: 0,
     askedCount: 0,
     choices: [
-      "FC Bayern Munich",
-      "Atletico Madrid",
-      "Manchester City F.C.",
-      "Real Madrid C.F."
+      { id: 0, text: "The Green Bay Packers &amp; The Pittsburgh Steelers" },
+      { id: 1, text: "The Philadelphia Eagles &amp; The New England Patriots" },
+      { id: 2, text: "The Seattle Seahawks &amp; The Denver Broncos" },
+      { id: 3, text: "The New York Giants &amp; The New England Patriots" },
     ],
     difficulty: "easy",
     flagCount: 0,
-    category: "Sports"
+    category: "Sports",
   },
-  {
-    question: "Who won the 2011 Stanley Cup?",
-    answerId: 3,
-    answeredCount: 0,
-    askedCount: 0,
-    choices: [
-      "Montreal Canadiens",
-      "New York Rangers",
-      "Toronto Maple Leafs",
-      "Boston Bruins"
-    ],
-    difficulty: "medium",
-    flagCount: 0,
-    category: "Sports"
-  }
 ];
 
-const categoryMap = {
-  History: "-M3rLkmKk9Cv13bZRiG8",
-  "Science & Nature": "-M3rLkmMlMv6BFHjzizo",
-  "Science: Computers": "-M3rLkmMlMv6BFHjzizp",
-  "General Knowledge": "-M3rLkmNapWTregRSKQ-",
-  "Entertainment: Music": "-M3rLkmNapWTregRSKQ0",
-  "Entertainment: Comics": "-M3rLkmNapWTregRSKQ1",
-  "Entertainment: Video Games": "-M3rLkmNapWTregRSKQ2",
-  "Entertainment: Japanese Anime & Manga": "-M3rLkmOf9rNhse4uW8b",
-  Geography: "-M3rLkmOf9rNhse4uW8c",
-  Sports: "-M3rLkmOf9rNhse4uW8d",
-  "Entertainment: Board Games": "-M3rLkmOf9rNhse4uW8e",
-  Politics: "-M3rLkmOf9rNhse4uW8f",
-  Celebrities: "-M3rLkmOf9rNhse4uW8g",
-  "Entertainment: Books": "-M3rLkmPplV-BdR3Or-T",
-  "Entertainment: Television": "-M3rLkmQdBRGq-HoKK30",
-  "Entertainment: Cartoon & Animations": "-M3rLkmQdBRGq-HoKK31"
-};
 
 export const testSeeder = () => {
-  questions.forEach(ques => {
-    const cid = categoryMap[ques.category];
-    db.ref(`questionBank/${cid}`).push({ ...ques, catefory: null });
+  questions.forEach((ques) => {
+    //const cid = categoryMap[ques.category];
+    db.ref(`questionBank/-M44-6f4Q0JICodnveLg`).push({ ...ques, category: null });
   });
 };
