@@ -305,7 +305,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
             <div className={classes.timerContainer}>
               <UserAvatar score={totalScore/2} initials={initials} />
               <div className={classes.timer}><Timer counter={counter}/> </div>
-              <UserAvatar score={oppositeTotalScore/2} invert={true}/>
+              <UserAvatar score={oppositeTotalScore/2} invert={true} p2={true}/>
             </div>            
              <Typography variant="h6" align="left" paragraph className={classes.questionNumber}>
                 {initials} {questionNumber+1}<span className={classes.questionNumberSpan}>/{maxNumberOfQuestions}</span>
