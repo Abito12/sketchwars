@@ -124,6 +124,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   const [optionsActive, setOptionsActive] = useState(true);
   const [totalScore, setTotalScore] = useState(0); 
   const [oppositeTotalScore, setOppositeTotalScore] = useState(0);
+  const [categoryId, setCategoryId] = useState(null);
 
   const classes = useStyles();
 
@@ -132,8 +133,9 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
     if(!gameId) return;
     db.ref("games").child(gameId).once('value')
         .then(snapshot => {            
-            const qids = snapshot.val().questions;                                
+            const {questions: qids, categoryId: catId} = snapshot.val();                                
             setQuestionIds(qids);
+            setCategoryId(catId);
             let total = 0;
             let oppositeTotal = 0;
             let currentQIndex = 0;
@@ -157,9 +159,10 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
 
 
   useEffect(() => {
-    if(questionIds.length <= 0 || questionNumber < 0) return;    
+    if(questionIds.length <= 0 || questionNumber < 0 || !categoryId) return;    
     const handleSetQuestion = () => {        
-       db.ref("questionBank").child(questionIds[questionNumber].id).once('value')
+       db.ref("questionBank/" + categoryId).child(questionIds[questionNumber].id)
+        .once('value')
         .then(snapshot => {          
             setQuestion(snapshot.val());
             setCounter(null);
