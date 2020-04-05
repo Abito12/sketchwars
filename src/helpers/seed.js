@@ -11,6 +11,7 @@ export const seedUser = (collection, user) => {
     name: user.displayName || user.email,
     streak: 0,
     prefferedLanguageId: "en",
+    photoURL: user.photoURL
   });
 };
 
