@@ -107,7 +107,7 @@ class QuizComponent extends Component {
     const { currentUserId } = this.props;
     const {categories} = this.state;
 
-    const catId = categoryId || categories[Math.floor(Math.random * categories.length)].id;
+    const catId = categoryId || categories[Math.floor(Math.random() * categories.length)].id;
 
     const questions = await this.fetchQuestions(catId);
 
@@ -142,7 +142,7 @@ class QuizComponent extends Component {
         <AppBar position="relative">
           <Toolbar>
             <Typography variant="h6" color="text" noWrap>
-              Home
+              
             </Typography>
           </Toolbar>
         </AppBar>
