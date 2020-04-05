@@ -32,12 +32,13 @@ const UserAvatar = ({initials,
   height='50px', 
   width='50px',
   flexDirection='row',
+  image,
   p2=false
 }) => {
   const classes = useStyles({invert, height, width, flexDirection, textSize, p2});
 
   const renderUserDetails = (initials, score, invert) => {
-      const avatarEl = <Avatar className={classes.avatar}>{initials}</Avatar>;
+      const avatarEl = <Avatar className={classes.avatar} src={image}>{initials}</Avatar>;
       const scoreEl = <p className={classes.score}>{score}</p>;
       if(invert) {
         return [avatarEl, scoreEl];

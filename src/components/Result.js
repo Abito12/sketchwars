@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
 const setIntervalIds = [];
 
-const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", displayName="PBqe"}) => {
+const Result = ({ maxNumberOfQuestions=10, currentUserId, initials, displayName, photoURL}) => {
   let { gameId } = useParams();
 
   const [resultUrl, setResultUrl] = useState(null);
@@ -110,8 +110,10 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", display
           oppPlayerTotal += (playerTwoId && ques.scores[playerTwoId]) || 0;
         }
       });
-      setPlayerScore(playerTotal);
-      setOppositeScore(oppPlayerTotal);
+      
+      setPlayerScore(currentUserId === playerOneId ? playerTotal : oppPlayerTotal);
+      setOppositeScore(currentUserId === playerOneId ? oppPlayerTotal : playerTotal);
+      
       const {status} = snapshot.val();
       setPlayerCompleted(status[playerOneId] || false);
       setOppositeCompleted(status[playerTwoId] || false);      
@@ -174,6 +176,7 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", display
                       flexDirection={'column'}
                       initials={initials} 
                       score={playerScore} 
+                      image={photoURL}
                       invert={true} />
                     <UserAvatar 
                       height={'100px'}
@@ -182,6 +185,7 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", display
                       flexDirection={'column'}
                       initials={initials} 
                       score={oppositeScore} 
+                      image={photoURL}
                       p2={true}
                       invert={true} />
                   </div>
