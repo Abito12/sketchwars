@@ -2,17 +2,9 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  Grid,
-  Divider
-} from '@material-ui/core';
+import {Card, CardContent, CardActions, Typography, Grid, Divider} from '@material-ui/core';
 
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
-import {hexToRgb} from '../../helpers/utilities';
 import GameDialog from '../GameDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -49,7 +41,6 @@ const useStyles = makeStyles(theme => ({
 const CategoryCard = props => {
 
   const [showDialog, toggleDialog] = useState(false); 
-
   const {className, leftColor, rightColor, category, handleInvitationClick} = props;
   const classes = useStyles({leftColor, rightColor});
 
@@ -62,29 +53,16 @@ const CategoryCard = props => {
     />
     <Card className={clsx(classes.root, className)} onClick = {() => toggleDialog(!showDialog)}>
       <CardContent>
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h6"
-        >
+        <Typography align="center" gutterBottom variant="h6">
           {category.name}
         </Typography>
       </CardContent>
       <Divider />
       <CardActions>
-        <Grid
-          container
-          justify="space-between"
-        >
-          <Grid
-            className={classes.statsItem}
-            item
-          >
+        <Grid container justify="space-between">
+          <Grid className={classes.statsItem} item>
             <TrendingUpIcon className={classes.statsIcon} />
-            <Typography
-              display="inline"
-              variant="body2"
-            >
+            <Typography display="inline"variant="body2">
               {Math.floor(Math.random() * 100) + 12} People played 
             </Typography>
           </Grid>
