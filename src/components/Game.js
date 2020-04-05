@@ -133,23 +133,21 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
     if(!gameId) return;
     db.ref("games").child(gameId).once('value')
         .then(snapshot => {            
-            const {questions: qids, categoryId: catId} = snapshot.val();                                
-            setQuestionIds(qids);
+            const {questions: questionMap, categoryId: catId} = snapshot.val();                                
+            setQuestionIds(Object.keys(questionMap));
             setCategoryId(catId);
-            let total = 0;
-            let oppositeTotal = 0;
-            let currentQIndex = 0;
-            qids.forEach((q, i) => {
-              const playerScore = (q.scores || []).find(sc => sc.playerId === currentUserId);
-                if(playerScore){
+
+            let [total, oppositeTotal, currentQIndex] = [0, 0, 0];
+            Object.keys(questionMap).forEach((key, i) => {
+              const questionScores = questionMap[key].scores || {};
+              if (typeof questionScores[currentUserId] === 'number') {
                   currentQIndex = i;  
-                  total += playerScore.score;
-                  const oppositePlayerScore = (q.scores || []).find(sc => sc.playerId !== currentUserId);
-                  if(oppositePlayerScore){
-                    oppositeTotal += oppositePlayerScore.score;
-                  }
-                }
-            });  
+                  total += questionScores[currentUserId];
+                  const oppPlayerId = Object.keys(questionScores).find(key => key !== currentUserId);
+                  if (oppPlayerId) oppositeTotal += questionScores[oppPlayerId];
+              }
+            });
+
             setQuestionNumber(currentQIndex);      
             setTotalScore(total);    
             setOppositeTotalScore(oppositeTotal);
@@ -161,7 +159,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   useEffect(() => {
     if(questionIds.length <= 0 || questionNumber < 0 || !categoryId) return;    
     const handleSetQuestion = () => {        
-       db.ref("questionBank/" + categoryId).child(questionIds[questionNumber].id)
+       db.ref("questionBank/" + categoryId).child(questionIds[questionNumber])
         .once('value')
         .then(snapshot => {          
             setQuestion(snapshot.val());
@@ -185,22 +183,21 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   }, [question])
 
   const setQuestionEndTime = () => {
-    const ref = db.ref(`games/${gameId}/questions`);
-    ref.once('value').then(snapshot => {
-      const questions = snapshot.val();
-      const currentQuestion = questions[questionNumber];
+    const currentQuestionId = questionIds[questionNumber];
+    const ref = db.ref(`games/${gameId}/questions/${currentQuestionId}`);
 
-      const {endTimes} = currentQuestion;
+    ref.once('value').then(snap => {
+      const currentQuestionStats = snap.val();
+      const {endTimes} = currentQuestionStats;
 
       let endsAt;
       if (endTimes && endTimes[currentUserId]) {
         endsAt = endTimes[currentUserId];
       } else {
         endsAt = Date.now() + (roundTime * 1000) + 1000;
-        currentQuestion['endTimes'] = {
-          [currentUserId]: endsAt
-        }
-        ref.set(questions).then(() => setIsLoading(false));
+        const updates = {};
+        updates[`/endTimes/${currentUserId}`] = endsAt;
+        ref.update(updates).then(() => setIsLoading(false));
       }
 
       const timeout = setInterval(countDown, 1000);
@@ -249,7 +246,6 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
     e.currentTarget.style.color = 'white';
   }
 
-
   const calculateScore = () => {
     if (counter >= 8)
       return questionScore;
@@ -258,21 +254,24 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   }
 
   const handleScoreUpdate = async (score) => {
-    setTotalScore(totalScore + score);    
-    const ref = db.ref(`games/${gameId}/questions`);
-    ref.once('value').then(snapshot => {
-      const questions = snapshot.val();
-      const currentQuestion = questions[questionNumber];
+    setTotalScore(totalScore + score);
 
-      const playerScore = {playerId: currentUserId, score};
-      if (currentQuestion.scores) {
-        setOppositeTotalScore(oppositeTotalScore + currentQuestion.scores[0].score);
-        if (currentQuestion.scores.every(sc => sc.playerId !== currentUserId))
-          currentQuestion.scores.push(playerScore);        
-      } else {
-        currentQuestion.scores = [playerScore];
+    const currentQuestionId = questionIds[questionNumber];
+    const ref = db.ref(`games/${gameId}/questions`);
+
+    ref.once('value').then(snapshot => {  
+      const updates = {};
+      updates[`/${currentQuestionId}/scores/${currentUserId}`] = score;
+      ref.update(updates).then(handleGameStatus);
+
+      const questions = Object.values(snapshot.val()); 
+      let oppScore = 0;
+      for (let i = 0; i <= questionNumber; i++) {
+        const scores = questions[i].scores ||  {};
+        const oppPlayerId = Object.keys(scores).find(key => key !== currentUserId);
+        if (oppPlayerId) oppScore += questions[i].scores[oppPlayerId];
       }
-      return ref.set(questions).then(handleGameStatus);
+      setOppositeTotalScore(oppScore);
     });
   };
 
@@ -288,7 +287,6 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
     } else { //10th ques
       console.log("GAME OVER> GO TO NEXT SCREEN");
     }
-
   }
   
   return (

@@ -95,7 +95,7 @@ class QuizComponent extends Component {
     const selected = {};
     for (let i = 0; i < numQuestions; i++) {
       let randomIndex = this.getRandomIndex(questionBank);
-      while (selected[randomIndex])
+      while (selected[randomIndex] || !questionBank[randomIndex].choices)
         randomIndex = this.getRandomIndex(questionBank);
       selected[randomIndex] = true;
       questions[i] = questionBank[randomIndex];
@@ -111,19 +111,23 @@ class QuizComponent extends Component {
 
     const questions = await this.fetchQuestions(catId);
 
+    const gameQuestions = {};
+    questions.forEach(ques => gameQuestions[ques.id] = {
+      // To be removed later
+      createdTime: Date.now()
+    });
+
     const initialGameData = {
       playerOneId: currentUserId,
       creationTime: Date.now(),
       expired: false,
-      questions: questions.map(({ id }) => ({ id })),
+      questions: gameQuestions,
       categoryId: catId
     };
 
     db.ref("games")
       .push(initialGameData)
-      .then(docRef => {
-        this.setState({ redirectURL: "/starwars/" + docRef.key });
-      });
+      .then(docRef => this.setState({ redirectURL: "/starwars/" + docRef.key }));
   };
 
   render() {

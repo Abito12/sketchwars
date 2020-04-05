@@ -6,6 +6,7 @@ export const PrivateRoute = ({
     authenticated,
     ...rest
   }) => {
+    console.log(Component, authenticated)
     return (
       <Route
         {...rest}
@@ -20,13 +21,13 @@ export const PrivateRoute = ({
   export const PublicRoute = ({
     component: Component,
     authenticated,
+    location,
     ...rest
   }) => {
     return (
       <Route
         {...rest}
-        render={props => !authenticated ? <Component {...props} /> : <Redirect to="/quiz" />}
+        render={props => !authenticated ? <Component {...props} /> : <Redirect to={location.state.from.pathname || '/quiz'} />}
       />
     );
   };
-  
