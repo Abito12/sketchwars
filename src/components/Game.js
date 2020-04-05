@@ -12,7 +12,8 @@ import Loader from '../templates/Loader';
 import FlagIcon from '@material-ui/icons/Flag';
 import Fab from '@material-ui/core/Fab';
 import {  
-  useParams
+  useParams,
+  Redirect
 } from "react-router-dom";
 
 
@@ -125,6 +126,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   const [totalScore, setTotalScore] = useState(0); 
   const [oppositeTotalScore, setOppositeTotalScore] = useState(0);
   const [categoryId, setCategoryId] = useState(null);
+  const [redirectToResult, setRedirectToResult] = useState(false);
 
   const classes = useStyles();
 
@@ -286,7 +288,15 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
       handleNextQuestion();
     } else { //10th ques
       console.log("GAME OVER> GO TO NEXT SCREEN");
+      const ref = db.ref(`games/${gameId}/`);
+      const updates = {};
+      updates[`/status/${currentUserId}`] = {completed: true};
+      ref.update(updates).then(() => setRedirectToResult(true));      
     }
+  }
+
+  if (redirectToResult) {
+    return <Redirect to={`/result/${gameId}`} />
   }
   
   return (

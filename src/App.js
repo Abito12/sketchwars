@@ -12,6 +12,8 @@ import { db } from "./services/firebase";
 import { seedUser, seedCategory, testSeeder} from "./helpers/seed";
 import { getInitials } from "./helpers/utilities";
 import StarWars from './templates/StarWars';
+import Result from './components/Result';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -72,7 +74,8 @@ class App extends React.Component {
           <PrivateRoute exact path="/" {...this.state} component={Quiz} />
           <PrivateRoute path="/quiz" {...this.state} component={Quiz} />
           <PrivateRoute path="/game/:gameId" {...this.state} authenticated={authenticated} component={Game} />
-          <PrivateRoute path="/starwars/:gameId" {...this.state} authenticated={authenticated} component={StarWars} />    
+          <PrivateRoute path="/starwars/:gameId" {...this.state} authenticated={authenticated} component={StarWars} />  
+          <PrivateRoute path="/result/:gameId" {...this.state} authenticated={authenticated} component={Result} />    
           <PublicRoute path="/signup" authenticated={authenticated} component={Signup} />
         </Switch>
       </Router>;
