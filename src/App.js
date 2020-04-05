@@ -35,7 +35,8 @@ class App extends React.Component {
           authenticated: !!user,
           loading: false,
           currentUserId: (user && user.uid) || '',
-          initials: (user && user.displayName) ? getInitials(user.displayName) : this.state.initials       
+          initials: (user && user.displayName) ? getInitials(user.displayName) : this.state.initials,
+          displayName: user && user.displayName
         });
         if(user) {          
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
