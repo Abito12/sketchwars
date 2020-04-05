@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {useParams, Redirect} from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -21,12 +21,18 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
     height: "100vh",
   },
-  linkStyle: {
+  textarea: {
     width: "250px",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     color: "white",
+    background: 'none',
+    border: 0,
+    outline: 'none',    
+    fontSize: '14px',
+    paddingTop: '10px',
+    resize: 'none'
   },
 }));
 
@@ -36,6 +42,8 @@ const StarWars = ({ currentUserId }) => {
 
   const [gameUrl, setGameUrl] = useState(null);
   const [redirectToGame, setRedirectToGame] = useState(false);
+  const [copyBtnText, setCopyBtnText] = useState('copy');
+  const textAreaRef = useRef(null);
 
   useEffect(() => {
     const dbRef = db.ref("games/" + gameId);
@@ -83,6 +91,16 @@ const StarWars = ({ currentUserId }) => {
     setRedirectToGame(hasOppositePlayerStarted(status));
   };
 
+  function copyToClipboard(e) {
+    setCopyBtnText('Copied!');              
+    textAreaRef.current.select();
+    document.execCommand('copy');    
+    e.target.focus();    
+    setTimeout(() => {
+      setCopyBtnText('copy');          
+    }, 2000); 
+  };
+
   if (redirectToGame) {
     return <Redirect to={`/game/${gameId}`} />
   }
@@ -125,16 +143,24 @@ const StarWars = ({ currentUserId }) => {
                 variant="outlined"
                 size="small"
                 style={{ textTransform: "lowercase" }}
+                disableRipple
               >
-                <span className={classes.linkStyle}>{gameUrl}</span>
+                <textarea 
+                  className={classes.textarea} 
+                  ref={textAreaRef} 
+                  spellcheck="false"
+                  value={gameUrl} />
               </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                style={{ marginLeft: "6px" }}
-              >
-                Copy
-              </Button>
+              {document.queryCommandSupported('copy') &&
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  style={{ marginLeft: "6px" }}
+                  onClick={copyToClipboard}
+                >
+                  {copyBtnText}
+                </Button>
+              }
             </div>
             <div
               style={{

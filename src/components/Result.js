@@ -8,15 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from '../templates/CopyRight';
 import Loader from '../templates/Loader';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import {  
-  useParams,
-  Link
-} from "react-router-dom";
-import ErrorIcon from '@material-ui/icons/Error';
-
+import {useParams} from "react-router-dom";
 import FacebookIcon from '@material-ui/icons/Facebook';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import RedditIcon from '@material-ui/icons/Reddit';
@@ -25,7 +17,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import withRoot from '../helpers/withRoot';
 import UserAvatar from '../templates/UserAvatar';
 import { db } from "../services/firebase";
-import  { shuffleArray, isEmptyObj, decodeHtml } from "../helpers/utilities";
+import  {getInitials} from "../helpers/utilities";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +80,7 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
   const [playerScore, setPlayerScore] = useState(0);
   const [oppositeScore, setOppositeScore] = useState(0);
   const [copyBtnText, setCopyBtnText] = useState('copy');
+  const [oppPlayerDetails, setOppPlayerDetails] = useState({});
   const textAreaRef = useRef(null);
 
   useEffect(() => {
@@ -103,6 +96,11 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
 
       let [playerTotal, oppPlayerTotal] = [0, 0];
       const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== playerOneId);
+
+
+      if (playerTwoId) fetchUserDetails(playerTwoId)
+
+
       questionData.forEach(ques => {    
         if(ques.scores) {
           playerTotal += ques.scores[playerOneId] || 0;
@@ -122,6 +120,12 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
 
   }, []);
 
+  const fetchUserDetails = (userId) => {
+    db.ref("users").orderByChild("uid").equalTo(userId).once('value').then(snapshot => {
+        const {name, photoURL} = Object.values(snapshot.val()).pop();
+        setOppPlayerDetails({name, photoURL});
+    });
+  }
 
   const handleGameDataChange = (snapshot) => {
     const {playerOneId, status, questions} = snapshot.val();
@@ -198,25 +202,28 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
                       flexDirection={'column'}
                       initials={initials} 
                       score={playerScore} 
+                      invert={true}
                       image={photoURL}
-                      invert={true} />
+                      />
                     <UserAvatar 
                       height={'100px'}
                       width={'100px'}
                       textSize={'40px'}
                       flexDirection={'column'}
-                      initials={initials} 
+                      initials={oppPlayerDetails.name ? getInitials(oppPlayerDetails.name) : 'P2'} 
                       score={oppositeScore} 
                       image={photoURL}
                       p2={true}
-                      invert={true} />
+                      invert={true} 
+                      image={oppPlayerDetails.photoURL}
+                      />
                   </div>
                   <div className={classes.scoreContainer}>
                     <Typography variant="p" className={classes.displayName} gutterBottom>
                       {displayName}
                     </Typography>
                     <Typography variant="p" className={classes.displayName} gutterBottom>
-                      {displayName}
+                      {oppPlayerDetails.name || 'Player 2'}
                     </Typography>
                   </div>
                   <div style={{display: 'flex', marginTop: '14px', flexDirection: 'row', justifyContent: 'center'}}>
@@ -245,48 +252,7 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
                       </Button>
                     }
                 </div>
-            <div style={{display: 'flex', flexDirection: 'row', marginTop: '16px', justifyContent: 'space-around'}}>
-            <a href={`https://www.facebook.com/sharer/sharer.php?u=${resultUrl}`} target="_blank" rel="noopener noreferrer"> 
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{border: 'none'}}
-                >
-                                   
-                    <FacebookIcon style={{ color: '#3b5998' }} fontSize="large" />
-                  
-                </Button>
-                </a>
-                <a href={`https://api.whatsapp.com/send?text=Hi, Play with me on Quizup! Click here: ${resultUrl}`} target="_blank" rel="noopener noreferrer">                    
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{border: 'none'}}
-                >                  
-                      <WhatsAppIcon style={{ color: '#128C7E' }} fontSize="large" />                                    
-                </Button>
-                </a>
-                <a href={`http://www.reddit.com/submit?url=${resultUrl}&title=Play with me on Quizup. Click on the URL`} target="_blank" rel="noopener noreferrer">
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{border: 'none'}}
-                >                  
-                    <RedditIcon style={{ color: '#FF4301' }} fontSize="large" />                  
-                </Button>
-                </a>
-                <a href="mailto:friend@site.com?subject=I challenge you to a game of quizup" rel="noopener noreferrer">
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{border: 'none'}}
-                >
-                  
-                    <EmailIcon style={{ color: '#E2E2E2' }} fontSize="large" />                  
-                </Button>
-                </a>
-            </div>
-                </div>                
+              </div>             
             </Container>
           </div>
         </main>

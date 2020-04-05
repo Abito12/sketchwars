@@ -32,8 +32,8 @@ const UserAvatar = ({initials,
   height='50px', 
   width='50px',
   flexDirection='row',
-  image,
-  p2=false
+  p2=false,
+  image
 }) => {
   const classes = useStyles({invert, height, width, flexDirection, textSize, p2});
 

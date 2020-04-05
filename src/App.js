@@ -8,9 +8,9 @@ import Signup from "./components/Signup";
 import Game from "./components/Game";
 import Loader from './templates/Loader';
 
-import { db } from "./services/firebase";
-import { seedUser, seedCategory, testSeeder} from "./helpers/seed";
-import { getInitials } from "./helpers/utilities";
+import {db} from "./services/firebase";
+import {seedUser} from "./helpers/seed";
+import {getInitials} from "./helpers/utilities";
 import StarWars from './templates/StarWars';
 import Result from './components/Result';
 
@@ -35,9 +35,9 @@ class App extends React.Component {
           authenticated: !!user,
           loading: false,
           currentUserId: (user && user.uid) || '',
-          displayName: (user && user.displayName) || '',
           initials: (user && user.displayName) ? getInitials(user.displayName) : this.state.initials,
-          photoURL: (user && user.photoURL) || ''    
+          displayName: user && user.displayName,
+          photoURL: user.photoURL || ''
         });
         if(user) {          
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
