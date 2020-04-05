@@ -9,11 +9,8 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../templates/CopyRight';
 import Loader from '../templates/Loader';
 import {useParams} from "react-router-dom";
-import FacebookIcon from '@material-ui/icons/Facebook';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
-import RedditIcon from '@material-ui/icons/Reddit';
-import EmailIcon from '@material-ui/icons/Email';
 
+import Appbar from '../templates/Appbar';
 import withRoot from '../helpers/withRoot';
 import UserAvatar from '../templates/UserAvatar';
 import { db } from "../services/firebase";
@@ -179,13 +176,7 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Home
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Appbar />
       {isLoading ? <Loader minHeight={'50vh'}/> : 
         <main>
           <div className={classes.heroContent}>
@@ -212,6 +203,7 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
                       flexDirection={'column'}
                       initials={oppPlayerDetails.name ? getInitials(oppPlayerDetails.name) : 'P2'} 
                       score={oppositeScore} 
+                      image={photoURL}
                       p2={true}
                       invert={true} 
                       image={oppPlayerDetails.photoURL}

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -15,8 +14,9 @@ import {
   useParams,
   Redirect
 } from "react-router-dom";
+import Avatar from '@material-ui/core/Avatar';
 
-
+import Appbar from '../templates/Appbar';
 import withRoot from '../helpers/withRoot';
 import VerticalProgress from '../templates/VerticalProgress';
 import UserAvatar from '../templates/UserAvatar';
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
 
 const setIntervalIds = [];
 
-const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore, initials}) => {
+const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore, initials, photoURL}) => {
   let { gameId } = useParams();
 
   const [counter, setCounter] = useState(null);
@@ -302,21 +302,15 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Home
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Appbar image={photoURL}/>
       {isLoading ? <Loader minHeight={'50vh'}/> : 
         <main>
           <div className={classes.heroContent}>
             <Container maxWidth="sm"> 
             <div className={classes.timerContainer}>
-              <UserAvatar score={totalScore/2} initials={initials} />
+              <UserAvatar score={totalScore} initials={initials} image={photoURL}/>
               <div className={classes.timer}><Timer counter={counter}/> </div>
-              <UserAvatar score={oppositeTotalScore/2} invert={true} p2={true}/>
+              <UserAvatar score={oppositeTotalScore} invert={true} p2={true} image={photoURL} initials={'P2'} />
             </div>            
              <Typography variant="h6" align="left" paragraph className={classes.questionNumber}>
                 {initials} {questionNumber+1}<span className={classes.questionNumberSpan}>/{maxNumberOfQuestions}</span>

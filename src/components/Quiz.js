@@ -14,6 +14,8 @@ import { db } from "../services/firebase";
 import CategoryListView from "../templates/Categories";
 import BottomNavigation from "../templates/BottomNavigationBar";
 import Loader from "../templates/Loader";
+import Appbar from '../templates/Appbar';
+
 
 const style = theme => ({
   icon: {
@@ -131,7 +133,7 @@ class QuizComponent extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, photoURL } = this.props;
     const { redirectURL, categories, isLoading } = this.state;
 
     return redirectURL ? (
@@ -139,13 +141,7 @@ class QuizComponent extends Component {
     ) : (
       <React.Fragment>
         <CssBaseline />
-        <AppBar position="relative">
-          <Toolbar>
-            <Typography variant="h6" color="text" noWrap>
-              
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <Appbar image={photoURL}/>
         <main>
           <div className={classes.heroContent}>
             <Container maxWidth="sm">
@@ -155,10 +151,11 @@ class QuizComponent extends Component {
                 align="center"
                 gutterBottom
               >
-                Description
+                BUZZLE
               </Typography>
               <Typography variant="subtitle2" align="center" paragraph>
-                Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum
+              Learn, grow and have fun challenging friends and players online on interests you’re best at!
+              Invite a friend to play agasint with or test your knowledge playing against a random opponent online.
               </Typography>
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">

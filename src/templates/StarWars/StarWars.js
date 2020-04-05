@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {useParams, Redirect} from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -15,27 +15,37 @@ import EmailIcon from "@material-ui/icons/Email";
 import { db } from "../../services/firebase";
 import "../../assets/css/component.css";
 import StarWarsLoader from './StarWarsLoader';
+import Appbar from '../Appbar';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.primary.main,
     height: "100vh",
   },
-  linkStyle: {
+  textarea: {
     width: "250px",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     color: "white",
+    background: 'none',
+    border: 0,
+    outline: 'none',    
+    fontSize: '14px',
+    paddingTop: '10px',
+    resize: 'none'
   },
 }));
 
-const StarWars = ({ currentUserId }) => {
+const StarWars = ({ currentUserId, photoURL }) => {
   const classes = useStyles();
   const { gameId } = useParams();
 
   const [gameUrl, setGameUrl] = useState(null);
   const [redirectToGame, setRedirectToGame] = useState(false);
+  const [copyBtnText, setCopyBtnText] = useState('copy');
+  const textAreaRef = useRef(null);
 
   useEffect(() => {
     const dbRef = db.ref("games/" + gameId);
@@ -83,19 +93,23 @@ const StarWars = ({ currentUserId }) => {
     setRedirectToGame(hasOppositePlayerStarted(status));
   };
 
+  function copyToClipboard(e) {
+    setCopyBtnText('Copied!');              
+    textAreaRef.current.select();
+    document.execCommand('copy');    
+    e.target.focus();    
+    setTimeout(() => {
+      setCopyBtnText('copy');          
+    }, 2000); 
+  };
+
   if (redirectToGame) {
     return <Redirect to={`/game/${gameId}`} />
   }
 
   return (
     <div className={classes.root}>
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h6" color="text" noWrap>
-            Home
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Appbar image={photoURL}/>
       <StarWarsLoader />
       <div
         lg={12}
@@ -125,16 +139,24 @@ const StarWars = ({ currentUserId }) => {
                 variant="outlined"
                 size="small"
                 style={{ textTransform: "lowercase" }}
+                disableRipple
               >
-                <span className={classes.linkStyle}>{gameUrl}</span>
+                <textarea 
+                  className={classes.textarea} 
+                  ref={textAreaRef} 
+                  spellcheck="false"
+                  value={gameUrl} />
               </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                style={{ marginLeft: "6px" }}
-              >
-                Copy
-              </Button>
+              {document.queryCommandSupported('copy') &&
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  style={{ marginLeft: "6px" }}
+                  onClick={copyToClipboard}
+                >
+                  {copyBtnText}
+                </Button>
+              }
             </div>
             <div
               style={{
