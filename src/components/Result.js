@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,11 +17,16 @@ import {
 } from "react-router-dom";
 import ErrorIcon from '@material-ui/icons/Error';
 
+import FacebookIcon from '@material-ui/icons/Facebook';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import RedditIcon from '@material-ui/icons/Reddit';
+import EmailIcon from '@material-ui/icons/Email';
 
 import withRoot from '../helpers/withRoot';
 import UserAvatar from '../templates/UserAvatar';
 import { db } from "../services/firebase";
 import  { shuffleArray, isEmptyObj, decodeHtml } from "../helpers/utilities";
+
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -55,33 +60,94 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-around'
   },
   displayName: {
-    fontSize: '20px'
+    fontSize: '12px'
+  },
+  textarea: {
+    width: '250px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    color: 'white',
+    background: 'none',
+    border: 0,
+    outline: 'none',    
+    fontSize: '14px',
+    paddingTop: '10px',
+    resize: 'none'
   }
 }));
 
 const setIntervalIds = [];
 
-const Result = ({ maxNumberOfQuestions=10, currentUserId, initials, displayName}) => {
+const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", displayName="PBqe"}) => {
   let { gameId } = useParams();
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [playerCompleted, setPlayerCompleted] = useState(true);
-  const [oppositeCompleted, setOppositeCompleted] = useState(true);
-  const [playerScore, setPlayerScore] = useState(10);
+
+  const [resultUrl, setResultUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [playerCompleted, setPlayerCompleted] = useState(false);
+  const [oppositeCompleted, setOppositeCompleted] = useState(false);
+  const [playerScore, setPlayerScore] = useState(0);
   const [oppositeScore, setOppositeScore] = useState(0);
+  const [copyBtnText, setCopyBtnText] = useState('copy');
+  const textAreaRef = useRef(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const url = `${window.location.origin}/result/${gameId}`;
+    setResultUrl(url);
+    const ref = db.ref(`games/${gameId}`);
+    ref.once('value').then(snapshot => {
+      const playerOneId = snapshot.val().playerOneId;
+      const questionData = Object.values(snapshot.val().questions);
+      // public page - if accessed before game started no questionData
+      if(!questionData.length) return;
+
+      let [playerTotal, oppPlayerTotal] = [0, 0];
+      const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== playerOneId);
+      questionData.forEach(ques => {    
+        if(ques.scores) {
+          playerTotal += ques.scores[playerOneId] || 0;
+          oppPlayerTotal += (playerTwoId && ques.scores[playerTwoId]) || 0;
+        }
+      });
+      setPlayerScore(playerTotal);
+      setOppositeScore(oppPlayerTotal);
+      const {status} = snapshot.val();
+      setPlayerCompleted(status[playerOneId] || false);
+      setOppositeCompleted(status[playerTwoId] || false);      
+    });
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2400);
+  }, [playerScore, oppositeScore]);
+  
 
   const classes = useStyles();
 
 
   const renderStatus = () => {
-    if(!oppositeCompleted) return "WAITING FOR OPPONENT TO COMPELETE THE MATCH!";
+    if(!playerCompleted || !oppositeCompleted) 
+      return "MATCH NOT COMPLETED!"; 
     if(playerScore > oppositeScore)
       return "YOU WON!";
     if(playerScore < oppositeScore)
       return "YOU LOST!";
     return "MATCH TIED!";
   }
-  
+
+  function copyToClipboard(e) {
+    setCopyBtnText('Copied!');              
+    textAreaRef.current.select();
+    document.execCommand('copy');    
+    e.target.focus();    
+    setTimeout(() => {
+      setCopyBtnText('copy');          
+    }, 2000); 
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -95,21 +161,7 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials, displayName}
       {isLoading ? <Loader minHeight={'50vh'}/> : 
         <main>
           <div className={classes.heroContent}>
-            <Container maxWidth="sm"> 
-              {!playerCompleted ? 
-                <div className={classes.errorContainer}>
-                  <ErrorIcon />
-                  <p>You haven't completed the quiz!</p>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                  >
-                    <Link to={`/game/${gameId}`} className={classes.link}>
-                        Play the Game now
-                    </Link>
-                  </Button>
-                </div> 
-                : 
+            <Container maxWidth="sm">            
                 <div>
                   <Typography className={classes.status} color="white" gutterBottom>
                     {renderStatus()}
@@ -141,28 +193,74 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials, displayName}
                       {displayName}
                     </Typography>
                   </div>
-                   <Card className={classes.root} variant="outlined">
-                    <CardContent>
-                      <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        Word of the Day
-                      </Typography>
-                      <Typography variant="h5" component="h2">                        
-                      </Typography>
-                      <Typography className={classes.pos} color="textSecondary">
-                        adjective
-                      </Typography>
-                      <Typography variant="body2" component="p">
-                        well meaning and kindly.
-                        <br />
-                        {'"a benevolent smile"'}
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Button size="small">Learn More</Button>
-                    </CardActions>
-                  </Card>
+                  <div style={{display: 'flex', marginTop: '14px', flexDirection: 'row', justifyContent: 'center'}}>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size='small'
+                      style={{textTransform: 'lowercase'}}
+                      disableRipple
+                    >
+                      <textarea 
+                        className={classes.textarea} 
+                        ref={textAreaRef} 
+                        spellcheck="false"
+                        value={resultUrl} />
+                      
+                    </Button>
+                    {document.queryCommandSupported('copy') &&
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{marginLeft: '6px'}}
+                        onClick={copyToClipboard}
+                      >
+                        {copyBtnText}
+                      </Button>
+                    }
                 </div>
-                }
+            <div style={{display: 'flex', flexDirection: 'row', marginTop: '16px', justifyContent: 'space-around'}}>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${resultUrl}`} target="_blank" rel="noopener noreferrer"> 
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{border: 'none'}}
+                >
+                                   
+                    <FacebookIcon style={{ color: '#3b5998' }} fontSize="large" />
+                  
+                </Button>
+                </a>
+                <a href={`https://api.whatsapp.com/send?text=Hi, Play with me on Quizup! Click here: ${resultUrl}`} target="_blank" rel="noopener noreferrer">                    
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{border: 'none'}}
+                >                  
+                      <WhatsAppIcon style={{ color: '#128C7E' }} fontSize="large" />                                    
+                </Button>
+                </a>
+                <a href={`http://www.reddit.com/submit?url=${resultUrl}&title=Play with me on Quizup. Click on the URL`} target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{border: 'none'}}
+                >                  
+                    <RedditIcon style={{ color: '#FF4301' }} fontSize="large" />                  
+                </Button>
+                </a>
+                <a href="mailto:friend@site.com?subject=I challenge you to a game of quizup" rel="noopener noreferrer">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{border: 'none'}}
+                >
+                  
+                    <EmailIcon style={{ color: '#E2E2E2' }} fontSize="large" />                  
+                </Button>
+                </a>
+            </div>
+                </div>                
             </Container>
           </div>
         </main>
