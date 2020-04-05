@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import CopyRight from '../templates/CopyRight';
+import Appbar from './Appbar';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +49,7 @@ export default function SignInSide({signUpHandler}) {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
+      <Appbar />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>

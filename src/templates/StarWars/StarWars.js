@@ -15,6 +15,8 @@ import EmailIcon from "@material-ui/icons/Email";
 import { db } from "../../services/firebase";
 import "../../assets/css/component.css";
 import StarWarsLoader from './StarWarsLoader';
+import Appbar from '../Appbar';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StarWars = ({ currentUserId }) => {
+const StarWars = ({ currentUserId, photoURL }) => {
   const classes = useStyles();
   const { gameId } = useParams();
 
@@ -107,13 +109,7 @@ const StarWars = ({ currentUserId }) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h6" color="text" noWrap>
-            Home
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Appbar image={photoURL}/>
       <StarWarsLoader />
       <div
         lg={12}
