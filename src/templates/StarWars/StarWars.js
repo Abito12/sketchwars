@@ -35,9 +35,7 @@ const StarWars = ({ currentUserId }) => {
   const { gameId } = useParams();
 
   const [gameUrl, setGameUrl] = useState(null);
-  // const [pOneId, setPlayerOneId] = useState(null);
   const [redirectToGame, setRedirectToGame] = useState(false);
-
 
   useEffect(() => {
     const dbRef = db.ref("games/" + gameId);

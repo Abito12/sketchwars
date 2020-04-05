@@ -77,9 +77,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const setIntervalIds = [];
 
-const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", displayName="PBqe"}) => {
+const Result = ({currentUserId, initials, displayName}) => {
   let { gameId } = useParams();
 
   const [resultUrl, setResultUrl] = useState(null);
@@ -110,13 +109,40 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", display
           oppPlayerTotal += (playerTwoId && ques.scores[playerTwoId]) || 0;
         }
       });
-      setPlayerScore(playerTotal);
-      setOppositeScore(oppPlayerTotal);
+
+      setPlayerScore(currentUserId === playerOneId ? playerTotal : oppPlayerTotal);
+      setOppositeScore(currentUserId === playerOneId ? oppPlayerTotal : playerTotal);
+
       const {status} = snapshot.val();
-      setPlayerCompleted(status[playerOneId] || false);
-      setOppositeCompleted(status[playerTwoId] || false);      
+      setPlayerCompleted((status[playerOneId] && status[playerOneId].completed) || false);
+      setOppositeCompleted((status[playerTwoId] && status[playerTwoId].completed)|| false);      
     });
+
+    ref.on('value', handleGameDataChange);
+
   }, []);
+
+
+  const handleGameDataChange = (snapshot) => {
+    const {playerOneId, status, questions} = snapshot.val();
+
+    const questionData = Object.values(questions);
+    const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== playerOneId);
+
+    if (playerTwoId && status[playerTwoId]) {
+      if (status[playerTwoId].completed) {
+        setOppositeCompleted(true);
+
+        let oppPlayerTotal = 0;
+        questionData.forEach(ques => {    
+          if(ques.scores) {
+            oppPlayerTotal += (playerTwoId && ques.scores[playerTwoId]) || 0;
+          }
+        });
+        setOppositeScore(oppPlayerTotal);
+      }
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -124,9 +150,7 @@ const Result = ({ maxNumberOfQuestions=10, currentUserId, initials="PB", display
     }, 2400);
   }, [playerScore, oppositeScore]);
   
-
   const classes = useStyles();
-
 
   const renderStatus = () => {
     if(!playerCompleted || !oppositeCompleted) 
