@@ -83,34 +83,32 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
     setResultUrl(url);
     const ref = db.ref(`games/${gameId}`);
     ref.once('value').then(snapshot => {
-      const {status, playerOneId, questions, playerDetails} = snapshot.val();
+      const {status, questions, playerDetails} = snapshot.val();
 
       const questionData = Object.values(questions);
       // public page - if accessed before game started no questionData
       if(!questionData.length) return;
 
       let [playerTotal, oppPlayerTotal] = [0, 0];
-      const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== playerOneId);
+      const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== currentUserId);
 
       if (playerTwoId) fetchUserDetails(playerDetails, playerTwoId)
 
       questionData.forEach(ques => {    
         if(ques.scores) {
-          playerTotal += ques.scores[playerOneId] || 0;
+          playerTotal += ques.scores[currentUserId] || 0;
           oppPlayerTotal += (playerTwoId && ques.scores[playerTwoId]) || 0;
         }
       });
 
-      setPlayerScore(currentUserId === playerOneId ? playerTotal : oppPlayerTotal);
-      setOppositeScore(currentUserId === playerOneId ? oppPlayerTotal : playerTotal);
+      setPlayerScore(playerTotal);
+      setOppositeScore(oppPlayerTotal);
 
       
-      setPlayerCompleted((status[playerOneId] && status[playerOneId].completed) || false);
-      setOppositeCompleted((status[playerTwoId] && status[playerTwoId].completed)|| false);      
+      setPlayerCompleted((status[currentUserId] && status[currentUserId].completed) || false);
+      setOppositeCompleted((status[playerTwoId] && status[playerTwoId].completed)|| false);
+      ref.on('value', handleGameDataChange);   
     });
-
-    ref.on('value', handleGameDataChange);
-
   }, []);
 
   const fetchUserDetails = (playerDetails, userId) => {
@@ -125,10 +123,10 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
   }
 
   const handleGameDataChange = (snapshot) => {
-    const {playerOneId, status, questions} = snapshot.val();
+    const {status, questions} = snapshot.val();
 
     const questionData = Object.values(questions);
-    const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== playerOneId);
+    const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== currentUserId);
 
     if (playerTwoId && status[playerTwoId]) {
       if (status[playerTwoId].completed) {
@@ -166,7 +164,7 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Appbar />
+      <Appbar image={photoURL} />
       {isLoading ? <Loader minHeight={'50vh'}/> : 
         <main>
           <div className={classes.heroContent}>
