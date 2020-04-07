@@ -58,8 +58,8 @@ const StarWars = ({ currentUserId, photoURL, displayName}) => {
               setRedirectToGame(true);
             }
   
-            if (currentUserId === playerOneId) {  
-              const url = `${window.location.origin}/game/${gameId}`;
+            if (!currentUserId || currentUserId === playerOneId) {  
+              const url = `${window.location.origin}/starwars/${gameId}`;
               setGameUrl(url);
             } 
             dbRef.on('value', handleGameRef);
@@ -73,7 +73,7 @@ const StarWars = ({ currentUserId, photoURL, displayName}) => {
 
 
   const updatePlayerDetails = (playerOneId, currentUserId, photoURL, displayName) => {
-    if (playerOneId === currentUserId)
+    if (!currentUserId || playerOneId === currentUserId)
       return Promise.resolve();
 
     const ref = db.ref(`games/${gameId}/`);
