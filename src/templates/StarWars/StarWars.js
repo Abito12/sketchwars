@@ -49,35 +49,37 @@ const StarWars = ({ currentUserId, photoURL, displayName}) => {
     const dbRef = db.ref("games/" + gameId);
     dbRef.once("value").then((snapshot) => {
         const {playerOneId, status = {}, singlePlayer} = snapshot.val();
-
-        if (!singlePlayer) {
-          setMultiPlayerGame(true);
-          setRedirectToGame(hasOppositePlayerStarted(status));
-
-          if (status[currentUserId] && status[currentUserId].startedTime) {
-            setRedirectToGame(true);
-          }
-
-          if (currentUserId === playerOneId) {  
-            const url = `${window.location.origin}/game/${gameId}`;
-            setGameUrl(url);
+        updatePlayerDetails(playerOneId, currentUserId, photoURL, displayName).then(() => {
+          if (!singlePlayer) {
+            setMultiPlayerGame(true);
+            setRedirectToGame(hasOppositePlayerStarted(status));
+  
+            if (status[currentUserId] && status[currentUserId].startedTime) {
+              setRedirectToGame(true);
+            }
+  
+            if (currentUserId === playerOneId) {  
+              const url = `${window.location.origin}/game/${gameId}`;
+              setGameUrl(url);
+            } 
+            dbRef.on('value', handleGameRef);
           } else {
-            updatePlayerDetails(currentUserId, photoURL, displayName);
-          }
-          dbRef.on('value', handleGameRef);
-        } else {
-          setTimeout(() => setRedirectToGame(true), 3000);
-        }    
+            setTimeout(() => setRedirectToGame(true), 3000);
+          } 
+        });
       })
       .catch((error) => console.log(error));
   }, []);
 
 
-  const updatePlayerDetails = (currentUserId, photoURL, displayName) => {
+  const updatePlayerDetails = (playerOneId, currentUserId, photoURL, displayName) => {
+    if (playerOneId === currentUserId)
+      return Promise.resolve();
+
     const ref = db.ref(`games/${gameId}/`);
     const updates = {};
     updates[`/playerDetails/${currentUserId}`] = {displayName, photoURL};
-    ref.update(updates);
+    return ref.update(updates);
   }
 
   const handlePlayNow = async () => {

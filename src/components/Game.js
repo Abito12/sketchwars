@@ -297,6 +297,8 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   const oppositePlayerId = Object.keys(userDetails).find(key => key !== currentUserId);
   const oppositePlayerDetails = (oppositePlayerId && userDetails[oppositePlayerId]) || {};
 
+  const currentUserDetails = userDetails[currentUserId] || {};
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -307,10 +309,10 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
             <Container maxWidth="sm"> 
             <div className={classes.timerContainer}>
               <UserAvatar 
-                displayName={userDetails[currentUserId].displayName}
+                displayName={currentUserDetails.displayName}
                 score={totalScore}
                 initials={initials}
-                image={userDetails[currentUserId].photoURL} />
+                image={currentUserDetails.photoURL} />
               <div className={classes.timer}><Timer counter={counter}/> </div>
               <UserAvatar 
                 displayName={oppositePlayerDetails.displayName}
