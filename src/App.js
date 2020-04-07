@@ -33,15 +33,13 @@ class App extends React.Component {
     auth().onAuthStateChanged(user => {
         this.setState({
           authenticated: !!user,
-          loading: false
+          loading: false,
+          currentUserId: (user && user.uid) || '',
+          initials: (user && user.displayName) ? getInitials(user.displayName) : this.state.initials,
+          displayName: user && user.displayName,
+          photoURL: (user && user.photoURL) || ''
         });
-        if (user) { 
-          this.setState({
-            currentUserId: user.uid || '',
-            initials: user.displayName ? getInitials(user.displayName) : this.state.initials,
-            displayName: user.displayName,
-            photoURL: user.photoURL || ''
-          });
+        if (user) {
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
             if (!snapshot.exists()){
               seedUser("users", user);        
