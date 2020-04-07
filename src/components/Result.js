@@ -1,8 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -166,16 +163,6 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
     return "MATCH TIED!";
   }
 
-  function copyToClipboard(e) {
-    setCopyBtnText('Copied!');              
-    textAreaRef.current.select();
-    document.execCommand('copy');    
-    e.target.focus();    
-    setTimeout(() => {
-      setCopyBtnText('copy');          
-    }, 2000); 
-  };
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -219,32 +206,6 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
                       {oppPlayerDetails.name || 'Player 2'}
                     </Typography>
                   </div>
-                  <div style={{display: 'flex', marginTop: '14px', flexDirection: 'row', justifyContent: 'center'}}>
-                    <Button
-                      color="secondary"
-                      variant="outlined"
-                      size='small'
-                      style={{textTransform: 'lowercase'}}
-                      disableRipple
-                    >
-                      <textarea 
-                        className={classes.textarea} 
-                        ref={textAreaRef} 
-                        spellcheck="false"
-                        value={resultUrl} />
-                      
-                    </Button>
-                    {document.queryCommandSupported('copy') &&
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        style={{marginLeft: '6px'}}
-                        onClick={copyToClipboard}
-                      >
-                        {copyBtnText}
-                      </Button>
-                    }
-                </div>
               </div>             
             </Container>
           </div>
