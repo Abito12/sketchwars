@@ -8,8 +8,8 @@ const CopyRight = () => {
     return (
       <Typography variant="body2" color="text" align="center">
         {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
+        <Link color="inherit">
+          Buzzle | All rights reserved
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}

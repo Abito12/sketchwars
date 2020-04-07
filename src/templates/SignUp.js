@@ -10,13 +10,16 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import CopyRight from '../templates/CopyRight';
-import Appbar from './Appbar';
-
+import AppIcon from '../assets/images/appIcon.png'
+import withRoot from '../helpers/withRoot';
+// import FacebookIcon from '@material-ui/icons/Facebook';
+// import GTranslateIcon from '@material-ui/icons/GTranslate';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
-    background: theme.palette.primary.main
+    background: theme.palette.primary.main,
+    color: theme.palette.common.white
   },
   image: {
     backgroundImage: 'url(https://wallpaperaccess.com/full/27839.jpg)',
@@ -32,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    width: theme.spacing(12),
+    height: theme.spacing(12),
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -41,31 +45,38 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  google: {
+    margin: theme.spacing(1),
+    width: theme.spacing(2),
+    height: theme.spacing(2),
+  }
 }));
 
-export default function SignInSide({signUpHandler}) {
+const SignUp = ({signUpHandler}) => {
   const classes = useStyles();
 
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <Appbar />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid item xs={12} sm={8} md={5}>
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
+          <Avatar sizes="" className={classes.avatar} src={AppIcon}>
             <AccountCircleIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Quiz App
+            Buzzle
+          </Typography>
+          <Typography variant="subtitle2" align="center" paragraph style={{marginTop: '8px'}}>
+              Learn, grow and have fun challenging friends and players online on interests you’re best at!
           </Typography>
           <form className={classes.form} noValidate>
           <Button
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submit}
+              style={{backgroundColor: '#3b5998', color: 'white'}}
             >
               Sign In with Facebook
             </Button>
@@ -77,6 +88,7 @@ export default function SignInSide({signUpHandler}) {
                     color="secondary"
                     className={classes.submit}
                     onClick = {() => signUpHandler('google')}
+                    style={{backgroundColor: '#EA4335', color: 'white'}}
                     >
                     Sign in with Google
                 </Button>
@@ -89,4 +101,6 @@ export default function SignInSide({signUpHandler}) {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default withRoot(SignUp);

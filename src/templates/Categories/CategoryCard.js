@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 const CategoryCard = props => {
 
   const [showDialog, toggleDialog] = useState(false); 
-  const {className, leftColor, rightColor, category, handleInvitationClick} = props;
+  const {className, leftColor, rightColor, category, handleInvitationClick, handleSinglePlayer} = props;
   const classes = useStyles({leftColor, rightColor});
 
   return (
@@ -50,6 +50,7 @@ const CategoryCard = props => {
       show={showDialog}
       handleClose={() => toggleDialog(false)}
       handleInvitationClick ={() => handleInvitationClick(category.id)}
+      handleSinglePlayer={() => handleSinglePlayer(category.id)}
     />
     <Card className={clsx(classes.root, className)} onClick = {() => toggleDialog(!showDialog)}>
       <CardContent>

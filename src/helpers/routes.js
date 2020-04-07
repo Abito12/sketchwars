@@ -6,7 +6,6 @@ export const PrivateRoute = ({
     authenticated,
     ...rest
   }) => {
-    console.log(Component, authenticated)
     return (
       <Route
         {...rest}

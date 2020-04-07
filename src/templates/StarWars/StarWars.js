@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import {useParams, Redirect} from "react-router-dom";
 
-import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import withRoot from "../../helpers/withRoot";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -38,33 +35,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StarWars = ({ currentUserId, photoURL }) => {
+const StarWars = ({ currentUserId, photoURL, displayName}) => {
   const classes = useStyles();
   const { gameId } = useParams();
 
   const [gameUrl, setGameUrl] = useState(null);
   const [redirectToGame, setRedirectToGame] = useState(false);
   const [copyBtnText, setCopyBtnText] = useState('copy');
+  const [multiPlayerGame, setMultiPlayerGame] = useState(false);
   const textAreaRef = useRef(null);
 
   useEffect(() => {
     const dbRef = db.ref("games/" + gameId);
-
     dbRef.once("value").then((snapshot) => {
-        const {playerOneId, status} = snapshot.val();
-        setRedirectToGame(hasOppositePlayerStarted(status));
+        const {playerOneId, status = {}, singlePlayer} = snapshot.val();
 
-        if (currentUserId === playerOneId) {  
-          const url = `${window.location.origin}/game/${gameId}`;
-          setGameUrl(url);
-        }
+        if (!singlePlayer) {
+          setMultiPlayerGame(true);
+          setRedirectToGame(hasOppositePlayerStarted(status));
 
-        dbRef.on('value', handleGameRef);
+          if (status[currentUserId] && status[currentUserId].startedTime) {
+            setRedirectToGame(true);
+          }
 
+          if (currentUserId === playerOneId) {  
+            const url = `${window.location.origin}/game/${gameId}`;
+            setGameUrl(url);
+          } else {
+            updatePlayerDetails(currentUserId, photoURL, displayName);
+          }
+          dbRef.on('value', handleGameRef);
+        } else {
+          setTimeout(() => setRedirectToGame(true), 3000);
+        }    
       })
       .catch((error) => console.log(error));
   }, []);
 
+
+  const updatePlayerDetails = (currentUserId, photoURL, displayName) => {
+    const ref = db.ref(`games/${gameId}/`);
+    const updates = {};
+    updates[`/playerDetails/${currentUserId}`] = {displayName, photoURL};
+    ref.update(updates);
+  }
 
   const handlePlayNow = async () => {
     const ref = db.ref(`games/${gameId}/`);
@@ -76,7 +90,6 @@ const StarWars = ({ currentUserId, photoURL }) => {
         completed: false
       };
       gameData.status = status;
-      console.log(gameData);
       ref.update(gameData).then(() => setRedirectToGame(true));
     });
   };
@@ -119,6 +132,8 @@ const StarWars = ({ currentUserId, photoURL }) => {
           padding: "12px",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: "10px",
+          visibility: multiPlayerGame ? 'visible': 'hidden'
         }}
       >
         {/* <Link to={`/game/${gameId}`} style={{ textDecoration: "none" }}> */}
@@ -141,7 +156,7 @@ const StarWars = ({ currentUserId, photoURL }) => {
                 style={{ textTransform: "lowercase" }}
                 disableRipple
               >
-                <textarea 
+                <textarea
                   className={classes.textarea} 
                   ref={textAreaRef} 
                   spellcheck="false"

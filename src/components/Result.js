@@ -86,17 +86,16 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
     setResultUrl(url);
     const ref = db.ref(`games/${gameId}`);
     ref.once('value').then(snapshot => {
-      const playerOneId = snapshot.val().playerOneId;
-      const questionData = Object.values(snapshot.val().questions);
+      const {status, playerOneId, questions, playerDetails} = snapshot.val();
+
+      const questionData = Object.values(questions);
       // public page - if accessed before game started no questionData
       if(!questionData.length) return;
 
       let [playerTotal, oppPlayerTotal] = [0, 0];
       const playerTwoId = Object.keys(questionData[0].scores || {}).find(id => id !== playerOneId);
 
-
-      if (playerTwoId) fetchUserDetails(playerTwoId)
-
+      if (playerTwoId) fetchUserDetails(playerDetails, playerTwoId)
 
       questionData.forEach(ques => {    
         if(ques.scores) {
@@ -108,7 +107,7 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
       setPlayerScore(currentUserId === playerOneId ? playerTotal : oppPlayerTotal);
       setOppositeScore(currentUserId === playerOneId ? oppPlayerTotal : playerTotal);
 
-      const {status} = snapshot.val();
+      
       setPlayerCompleted((status[playerOneId] && status[playerOneId].completed) || false);
       setOppositeCompleted((status[playerTwoId] && status[playerTwoId].completed)|| false);      
     });
@@ -117,11 +116,15 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
 
   }, []);
 
-  const fetchUserDetails = (userId) => {
-    db.ref("users").orderByChild("uid").equalTo(userId).once('value').then(snapshot => {
-        const {name, photoURL} = Object.values(snapshot.val()).pop();
-        setOppPlayerDetails({name, photoURL});
-    });
+  const fetchUserDetails = (playerDetails, userId) => {
+    // db.ref("users").orderByChild("uid").equalTo(userId).once('value').then(snapshot => {
+    //     const {name, photoURL} = Object.values(snapshot.val()).pop();
+    //     setOppPlayerDetails({name, photoURL});
+    // });
+    if (playerDetails[userId]) {
+      const {displayName, photoURL} = playerDetails[userId];
+      setOppPlayerDetails({name: displayName, photoURL});
+    }
   }
 
   const handleGameDataChange = (snapshot) => {
@@ -203,7 +206,6 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
                       flexDirection={'column'}
                       initials={oppPlayerDetails.name ? getInitials(oppPlayerDetails.name) : 'P2'} 
                       score={oppositeScore} 
-                      image={photoURL}
                       p2={true}
                       invert={true} 
                       image={oppPlayerDetails.photoURL}

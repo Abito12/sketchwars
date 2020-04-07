@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CategoriesList = ({categories, handleInvitationClick}) => {
+const CategoriesList = ({categories, handleInvitationClick, handleSinglePlayer}) => {
   const classes = useStyles();
 
   const gradients = [
@@ -40,6 +40,11 @@ const CategoriesList = ({categories, handleInvitationClick}) => {
           container
           spacing={3}
         >
+          <Grid item lg={12} md={12} xs={12}>
+            <Typography variant="subtitle2" align="center" style={{color: 'white'}}>
+              Choose a category
+            </Typography>
+          </Grid>
           {categories.map((category, i) => {
               const color = gradients[i % gradients.length];
               
@@ -50,13 +55,14 @@ const CategoriesList = ({categories, handleInvitationClick}) => {
                       rightColor={color[1]}
                       category={category} 
                       handleInvitationClick={handleInvitationClick}
+                      handleSinglePlayer={handleSinglePlayer}
                     />
                 </Grid>
               );
           })}
         </Grid>
       </div>
-      <div className={classes.pagination}>
+      {/* <div className={classes.pagination}>
         <Typography variant="caption">1-6 of 20</Typography>
         <IconButton>
           <ChevronLeftIcon style={{ color: 'white'}} />
@@ -64,7 +70,7 @@ const CategoriesList = ({categories, handleInvitationClick}) => {
         <IconButton>
           <ChevronRightIcon style={{ color: 'white'}} />
         </IconButton>
-      </div>
+      </div> */}
     </div>
   );
 };

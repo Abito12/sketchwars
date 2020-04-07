@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import {getInitials} from '../helpers/utilities';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,12 +34,15 @@ const UserAvatar = ({initials,
   width='50px',
   flexDirection='row',
   p2=false,
-  image
+  image,
+  displayName
 }) => {
   const classes = useStyles({invert, height, width, flexDirection, textSize, p2});
 
+  const displayVal = displayName ? getInitials(displayName) : initials;
+
   const renderUserDetails = (initials, score, invert) => {
-      const avatarEl = <Avatar className={classes.avatar} src={image}>{initials}</Avatar>;
+      const avatarEl = <Avatar className={classes.avatar} src={image}>{displayVal}</Avatar>;
       const scoreEl = <p className={classes.score}>{score}</p>;
       if(invert) {
         return [avatarEl, scoreEl];
