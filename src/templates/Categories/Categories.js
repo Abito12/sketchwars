@@ -62,7 +62,7 @@ const CategoriesList = ({categories, handleInvitationClick, handleSinglePlayer})
           })}
         </Grid>
       </div>
-      <div className={classes.pagination}>
+      {/* <div className={classes.pagination}>
         <Typography variant="caption">1-6 of 20</Typography>
         <IconButton>
           <ChevronLeftIcon style={{ color: 'white'}} />
@@ -70,7 +70,7 @@ const CategoriesList = ({categories, handleInvitationClick, handleSinglePlayer})
         <IconButton>
           <ChevronRightIcon style={{ color: 'white'}} />
         </IconButton>
-      </div>
+      </div> */}
     </div>
   );
 };
