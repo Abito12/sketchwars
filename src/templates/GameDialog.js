@@ -10,7 +10,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AlertDialogSlide({show, handleClose, handleInvitationClick}) {
+export default function AlertDialogSlide({show, handleClose, handleInvitationClick, handleSinglePlayer}) {
   return (
     <div>
       <Dialog
@@ -27,7 +27,7 @@ export default function AlertDialogSlide({show, handleClose, handleInvitationCli
                 Play with a friend
             </Button>
             <Divider variant="middle" style={{"marginTop": "20px", "marginBottom": "20px"}}/>
-            <Button fullWidth variant="contained" color="secondary">
+            <Button fullWidth variant="contained" color="secondary" onClick={handleSinglePlayer}>
                 Find random opponent
             </Button>
         </DialogContent>

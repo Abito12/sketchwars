@@ -3095,6 +3095,8 @@
 	font-weight: bold;
 	text-transform: uppercase;
 	letter-spacing: 2px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 .loading:after {
@@ -3131,7 +3133,7 @@
 	}
 
 	.loading {
-		font-size: 20px;
+		font-size: 25px;
 	}
 
 }

@@ -243,6 +243,9 @@ const StarWarsLoader = () => (
       </div>
     </div>
     <div className="page-deco"></div>
+    <div className="loading">
+      Waiting for opponent
+    </div>
   </div>
 );
 

@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -106,7 +104,7 @@ class QuizComponent extends Component {
   };
 
   handleInvitationClick = async categoryId => {
-    const { currentUserId } = this.props;
+    const {currentUserId, displayName, photoURL} = this.props;
     const {categories} = this.state;
 
     const catId = categoryId || categories[Math.floor(Math.random() * categories.length)].id;
@@ -124,13 +122,56 @@ class QuizComponent extends Component {
       creationTime: Date.now(),
       expired: false,
       questions: gameQuestions,
-      categoryId: catId
+      categoryId: catId,
+      playerDetails: {
+        [currentUserId]: {displayName, photoURL}
+      }
     };
 
     db.ref("games")
       .push(initialGameData)
       .then(docRef => this.setState({ redirectURL: "/starwars/" + docRef.key }));
   };
+
+  /**
+   * Handler function to start 'Find a random opponent' game
+   */
+  handleSinglePlayer = async categoryId => {
+    const {currentUserId} = this.props;
+    const {categories} = this.state;
+
+    const catId = categoryId || categories[Math.floor(Math.random() * categories.length)].id;
+
+    const questions = await this.fetchQuestions(catId);
+
+    const gameQuestions = {};
+    questions.forEach(ques => gameQuestions[ques.id] = {
+      // To be removed later
+      createdTime: Date.now(),
+      scores: {
+        'singlePlayerId': Math.floor(Math.random() * 10) + 10
+      },
+    });
+
+    const initialGameData = {
+      playerOneId: currentUserId,
+      creationTime: Date.now(),
+      expired: false,
+      questions: gameQuestions,
+      categoryId: catId,
+      singlePlayer: true,
+      status: {
+        'singlePlayerId': {
+          completed: true
+        }
+      }
+    };
+
+    db.ref("games")
+      .push(initialGameData)
+      .then(docRef => this.setState({ redirectURL: "/starwars/" + docRef.key }));
+  };
+
 
   render() {
     const { classes, photoURL } = this.props;
@@ -154,8 +195,7 @@ class QuizComponent extends Component {
                 BUZZLE
               </Typography>
               <Typography variant="subtitle2" align="center" paragraph>
-              Learn, grow and have fun challenging friends and players online on interests you’re best at!
-              Invite a friend to play agasint with or test your knowledge playing against a random opponent online.
+                Invite a friend to play against or test your knowledge playing against a random opponent online.
               </Typography>
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
@@ -169,7 +209,7 @@ class QuizComponent extends Component {
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button variant="outlined" color="secondary">
+                    <Button variant="outlined" color="secondary" onClick={() => this.handleSinglePlayer()}>
                       Find random opponent
                     </Button>
                   </Grid>
@@ -181,15 +221,13 @@ class QuizComponent extends Component {
         {isLoading ? (
           <Loader minHeight={"50vh"} />
         ) : (
-          <CategoryListView handleInvitationClick={this.handleInvitationClick} categories={categories} />
+          <CategoryListView 
+            handleInvitationClick={this.handleInvitationClick}
+            categories={categories}
+            handleSinglePlayer={this.handleSinglePlayer}  
+          />
         )}
         <footer className={classes.footer}>
-          <Typography variant="h6" align="center" gutterBottom>
-            Lorem Ipsum
-          </Typography>
-          <Typography variant="subtitle1" align="center" component="p">
-            Something here to give the footer a purpose!
-          </Typography>
           <Copyright />
         </footer>
         <BottomNavigation />

@@ -2,19 +2,13 @@ import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from '../templates/CopyRight';
 import Loader from '../templates/Loader';
-import FlagIcon from '@material-ui/icons/Flag';
-import Fab from '@material-ui/core/Fab';
-import {  
-  useParams,
-  Redirect
-} from "react-router-dom";
-import Avatar from '@material-ui/core/Avatar';
+
+import {useParams,Redirect} from "react-router-dom";
 
 import Appbar from '../templates/Appbar';
 import withRoot from '../helpers/withRoot';
@@ -127,6 +121,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   const [oppositeTotalScore, setOppositeTotalScore] = useState(0);
   const [categoryId, setCategoryId] = useState(null);
   const [redirectToResult, setRedirectToResult] = useState(false);
+  const [userDetails, setUserDetails] = useState({});
 
   const classes = useStyles();
 
@@ -135,10 +130,10 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
     if(!gameId) return;
     db.ref("games").child(gameId).once('value')
         .then(snapshot => {            
-            const {questions: questionMap, categoryId: catId} = snapshot.val();                                
+            const {questions: questionMap, categoryId: catId, playerDetails} = snapshot.val();                                
             setQuestionIds(Object.keys(questionMap));
             setCategoryId(catId);
-
+            setUserDetails(playerDetails);
             let [total, oppositeTotal, currentQIndex] = [0, 0, 0];
             Object.keys(questionMap).forEach((key, i) => {
               const questionScores = questionMap[key].scores || {};
@@ -238,7 +233,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
     setIntervalIds.forEach(clearInterval);
     setOptionsActive(false);    
     const answerId = e.currentTarget.value;
-    if(Number(answerId) !== correctOption){
+    if(Number(answerId) === correctOption){
       handleScoreUpdate(calculateScore());
       e.currentTarget.style.background = '#388e3c';
     } else {
@@ -298,7 +293,10 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
   if (redirectToResult) {
     return <Redirect to={`/result/${gameId}`} />
   }
-  
+
+  const oppositePlayerId = Object.keys(userDetails).find(key => key !== currentUserId);
+  const oppositePlayerDetails = (oppositePlayerId && userDetails[oppositePlayerId]) || {};
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -308,9 +306,20 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
           <div className={classes.heroContent}>
             <Container maxWidth="sm"> 
             <div className={classes.timerContainer}>
-              <UserAvatar score={totalScore} initials={initials} image={photoURL}/>
+              <UserAvatar 
+                displayName={userDetails[currentUserId].displayName}
+                score={totalScore}
+                initials={initials}
+                image={userDetails[currentUserId].photoURL} />
               <div className={classes.timer}><Timer counter={counter}/> </div>
-              <UserAvatar score={oppositeTotalScore} invert={true} p2={true} image={photoURL} initials={'P2'} />
+              <UserAvatar 
+                displayName={oppositePlayerDetails.displayName}
+                score={oppositeTotalScore}
+                invert={true}
+                p2={true}
+                initials={'P2'}
+                image={oppositePlayerDetails.photoURL}
+              />
             </div>            
              <Typography variant="h6" align="left" paragraph className={classes.questionNumber}>
                 {initials} {questionNumber+1}<span className={classes.questionNumberSpan}>/{maxNumberOfQuestions}</span>
@@ -326,11 +335,11 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
                   </div>
                   <VerticalProgress progress={oppositeTotalScore/2}/>
                 </Grid>
-                <Grid container justify="center" className={classes.options}>
+                {/* <Grid container justify="center" className={classes.options}>
                     <Fab color="secondary" aria-label="flag" className={classes.flagButton}>
                       <FlagIcon />
                     </Fab>
-              </Grid>
+              </Grid> */}
               </div>
             </Container>
           </div>
