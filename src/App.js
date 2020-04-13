@@ -38,8 +38,8 @@ class App extends React.Component {
           initials: user && (user.displayName ? getInitials(user.displayName) : this.state.initials),
           displayName: user && (user.displayName || ''),
           photoURL: user && (user.photoURL || '')
-        });
-        if (user) { 
+        });        
+        if (user) {
           db.ref("users").orderByChild("uid").equalTo(user.uid).once("value", snapshot => {
             if (!snapshot.exists()){
               seedUser("users", user);        

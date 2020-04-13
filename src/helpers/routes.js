@@ -27,7 +27,8 @@ export const PrivateRoute = ({
     return (
       <Route
         {...rest}
-        render={props => !authenticated ? <Component {...props} /> : <Redirect to={location.state &&  location.state.from && location.state.from.pathname || '/quiz'} />}
+        render={props => !authenticated ? <Component {...props} /> :
+         <Redirect to={(location.state && location.state.from && location.state.from.pathname) || '/quiz'} />}
       />
     );
   };
