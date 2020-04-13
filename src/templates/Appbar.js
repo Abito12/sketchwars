@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     appbar: {
@@ -13,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '10px',
         paddingRight: '10px',
         alignItems: 'center'
+    },
+    link: {
+      color: "white",
+      textDecoration: "none"
     }
 }));
 
@@ -23,9 +28,11 @@ const Appbar = ({image}) => {
   return (
     <AppBar position="relative" className={classes.appbar}>
         <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Buzzle
-          </Typography>
+          <Link to="/" className={classes.link}>
+            <Typography variant="h6" color="inherit" noWrap>
+              Buzzle
+            </Typography>
+          </Link>
         </Toolbar>
         <Avatar className={classes.avatar} src={image}>{'P1'}</Avatar>
     </AppBar>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import {useParams, Redirect} from "react-router-dom";
 
+import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import withRoot from "../../helpers/withRoot";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,6 +14,7 @@ import { db } from "../../services/firebase";
 import "../../assets/css/component.css";
 import StarWarsLoader from './StarWarsLoader';
 import Appbar from '../Appbar';
+import {randomIntFromInterval} from '../../helpers/utilities';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -64,7 +66,8 @@ const StarWars = ({ currentUserId, photoURL, displayName}) => {
             } 
             dbRef.on('value', handleGameRef);
           } else {
-            setTimeout(() => setRedirectToGame(true), 3000);
+            // wait-time between 3s-8s
+            setTimeout(() => setRedirectToGame(true), randomIntFromInterval(3000, 8000));
           } 
         });
       })
@@ -150,6 +153,9 @@ const StarWars = ({ currentUserId, photoURL, displayName}) => {
         {/* </Link> */}
         {gameUrl && (
           <div>
+            <Typography variant="subtitle2" align="center" style={{color: "#fff", marginBottom: "12px"}}>
+                Invite your friend to play with you by sharing this URL
+            </Typography>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Button
                 color="secondary"
