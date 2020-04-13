@@ -3,9 +3,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Button from "@material-ui/core/Button";
 import Copyright from '../templates/CopyRight';
 import Loader from '../templates/Loader';
-import {useParams} from "react-router-dom";
+import {useParams, Link} from "react-router-dom";
 
 import Appbar from '../templates/Appbar';
 import withRoot from '../helpers/withRoot';
@@ -60,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px',
     paddingTop: '10px',
     resize: 'none'
+  },
+  nav: {
+    marginTop: '40px'
   }
 }));
 
@@ -202,7 +206,17 @@ const Result = ({currentUserId, initials, displayName, photoURL}) => {
                     </Typography>
                     <Typography variant="p" className={classes.displayName} gutterBottom>
                       {oppPlayerDetails.name || 'Player 2'}
-                    </Typography>
+                    </Typography>                    
+                  </div>
+                  <div className={classes.nav}>
+                    <Link to="/" className={classes.link}>
+                      <Button
+                        variant="outlined" 
+                        color="secondary" 
+                      >
+                        GO TO HOME
+                      </Button>
+                    </Link>
                   </div>
               </div>             
             </Container>

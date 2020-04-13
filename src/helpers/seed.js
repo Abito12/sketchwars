@@ -24,10 +24,11 @@ export const seedAppConfig = (collection = "appConfig") => {
   });
 };
 
-export const seedCategory = (collection = "categories", cats) => {
+export const seedCategory = (collection = "questionBank", cats) => {
   cats.map((c) => {
     return db.ref(collection).push({
       name: c,
+      language: "ml" // remove for seeding english
     });
   });
 };
@@ -39,6 +40,38 @@ export const seedLanguage = (collection = "languages", langs) => {
     });
   });
 };
+
+export const users = {
+  "en": [
+    {"uid": "5e8d96f5fc13ae0897000000","name":"Julina Roebuck","email":"jroebuck0@howstuffworks.com","photoURL":"https://randomuser.me/api/portraits/women/29.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000001","name":"Rachelle Rego","email":"rrego1@weibo.com","photoURL":"https://randomuser.me/api/portraits/women/80.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000002","name":"Cynthie Debrick","email":"cdebrick2@wunderground.com","photoURL":"https://randomuser.me/api/portraits/women/54.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000003","name":"Bernadine Matantsev","email":"bmatantsev3@salon.com","photoURL":"http://dummyimage.com/241x229.png/dddddd/000000", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000004","name":"Alanson Channing","email":"achanning4@cdc.gov","photoURL":"https://randomuser.me/api/portraits/lego/0.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000005","name":"Ninette Bragger","email":"nbragger5@army.mil","photoURL":"https://randomuser.me/api/portraits/women/36.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000006","name":"Lottie Cuncarr","email":"lcuncarr6@instagram.com","photoURL":"https://randomuser.me/api/portraits/women/73.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000007","name":"Lynea Ungerechts","email":"lungerechts7@kickstarter.com","photoURL":"https://randomuser.me/api/portraits/women/42.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000008","name":"Claire Erdis","email":"cerdis8@kickstarter.com","photoURL":"https://randomuser.me/api/portraits/women/84.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000009","name":"Lanni Leeson","email":"lleeson9@printfriendly.com","photoURL":"https://randomuser.me/api/portraits/women/46.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0}
+  ],
+  "ml": [    
+    {"uid": "5e8d96f5fc13ae0817000000","name":"Praveena Manoj","email":"praveena@weibo.com","photoURL":"https://loremflickr.com/cache/resized/65535_49264041568_0300e63cca_h_320_240_g.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0827000000","name":"Rakhin Maria","email":"maria.rakhin@weibo.com","photoURL":"https://cdn130.picsart.com/270488301000201.jpg?type=webp&to=min&r=640", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0837000000","name":"Anjali Raveendran","email":"anjali.ravi@weibo.com","photoURL": "https://loremflickr.com/cache/resized/65535_49701169606_13078a7a2c_320_240_nofilter.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0847000000","name":"Misriya Parveen","email":"misri.parveen@weibo.com","photoURL":"https://loremflickr.com/cache/resized/65535_49287288812_cc3ab56551_320_240_nofilter.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0857000000","name":"Sadiya Rahmath","email":"sadiya.rahmath@weibo.com","photoURL":"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSZQkLcvBeEAkyGxLOmpAOi-zyMRHFGruWoOIjGCgUJIjz3sryI&usqp=CAU", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0867000000","name":"Nandana Jayaprakash","email":"nandana.jayaprakash@weibo.com","photoURL":"https://loremflickr.com/cache/resized/65535_49713708583_eb2741b4ba_n_320_240_nofilter.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0877000000","name":"Amala Mathew","email":"amala.mathew@weibo.com","photoURL":"https://im.indiatimes.in/content/itimes/photo/2016/Jul/21/1469099508-cutest-baby-images-after-shower-look.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0887000000","name":"Abhishek Mathew","email":"abhishek.mathew@weibo.com","photoURL":"https://randomuser.me/api/portraits/men/77.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0897000000","name":"Fayiz Ali","email":"fayizali@howstuffworks.com","photoURL":"https://randomuser.me/api/portraits/men/38.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0197000000","name":"Kevin Joy","email":"kevinjoy@howstuffworks.com","photoURL":"https://randomuser.me/api/portraits/men/6.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+    {"uid": "5e8d96f5fc13ae0297000000","name":"Abhijith K.V","email":"abhijithkv@howstuffworks.com","photoURL":"https://randomuser.me/api/portraits/men/65.jpg", "creationTime": Date.now(), gamesForfeit: 0, gamesPlayed: 0, gamesWon: 0, prefferedLanguageId: "en", streak: 0},
+  ]
+}
+
+export const seedMockUsers = (collection = "users", users) => {
+  users.map(u => db.ref(collection).push(u));
+}
 
 export const seedQuestions = (collection = "questionBank", questions) => {
   questions.map((c) => {
@@ -824,7 +857,7 @@ const questions = [
 ];
 
 
-export const testSeeder = () => {
+export const testSeeder = () => {  
   questions.forEach((ques) => {
     //const cid = categoryMap[ques.category];
     db.ref(`questionBank/-M44-6f4Q0JICodnveLg`).push({ ...ques, category: null });

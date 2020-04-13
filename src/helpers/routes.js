@@ -7,7 +7,6 @@ export const PrivateRoute = ({
     currentUserId,
     ...rest
   }) => {
-    if (!currentUserId) return null;
     return (
       <Route
         {...rest}
@@ -28,7 +27,7 @@ export const PrivateRoute = ({
     return (
       <Route
         {...rest}
-        render={props => !authenticated ? <Component {...props} /> : <Redirect to={location.state.from.pathname || '/quiz'} />}
+        render={props => !authenticated ? <Component {...props} /> : <Redirect to={location.state &&  location.state.from && location.state.from.pathname || '/quiz'} />}
       />
     );
   };

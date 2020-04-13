@@ -324,7 +324,7 @@ const Game = ({ maxNumberOfQuestions=10, currentUserId, roundTime, questionScore
               />
             </div>            
              <Typography variant="h6" align="left" paragraph className={classes.questionNumber}>
-                {initials} {questionNumber+1}<span className={classes.questionNumberSpan}>/{maxNumberOfQuestions}</span>
+                Question {questionNumber+1}<span className={classes.questionNumberSpan}>/{maxNumberOfQuestions}</span>
               </Typography>                         
               <Typography variant="h6" align="center" color="textSecondary" paragraph className={classes.question}>
                 {(question && !isEmptyObj(question)) ? decodeHtml(question.question) : "Question Placeholder"}

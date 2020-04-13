@@ -50,7 +50,7 @@ const CategoryCard = props => {
       show={showDialog}
       handleClose={() => toggleDialog(false)}
       handleInvitationClick ={() => handleInvitationClick(category.id)}
-      handleSinglePlayer={() => handleSinglePlayer(category.id)}
+      handleSinglePlayer={() => handleSinglePlayer(category.id, category.language)}
     />
     <Card className={clsx(classes.root, className)} onClick = {() => toggleDialog(!showDialog)}>
       <CardContent>

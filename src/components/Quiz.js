@@ -9,11 +9,12 @@ import Container from "@material-ui/core/Container";
 import withRoot from "../helpers/withRoot";
 import Copyright from "../templates/CopyRight";
 import { db } from "../services/firebase";
-import CategoryListView from "../templates/Categories";
 import BottomNavigation from "../templates/BottomNavigationBar";
 import Loader from "../templates/Loader";
 import Appbar from '../templates/Appbar';
-
+import Tabview from '../templates/Tabview';
+import {users} from '../helpers/seed'; //mock users for single player
+import {randomWithProbability} from '../helpers/utilities';
 
 const style = theme => ({
   icon: {
@@ -68,6 +69,7 @@ class QuizComponent extends Component {
         Object.keys(snapshotVal).forEach(key => {
           categories.push({
             name: snapshotVal[key].name,
+            language: snapshotVal[key].language || '',
             id: key
           });
         });
@@ -133,23 +135,35 @@ class QuizComponent extends Component {
       .then(docRef => this.setState({ redirectURL: "/starwars/" + docRef.key }));
   };
 
+  getUsers = lang => {
+    //if lang is english, all users can be returned, else only specific
+    if(!lang || lang === "" || lang === "en")
+      return [].concat(...Object.values(users));
+    return users[lang];
+  }
+
   /**
    * Handler function to start 'Find a random opponent' game
    */
-  handleSinglePlayer = async categoryId => {
+  handleSinglePlayer = async (categoryId, categoryLanguage) => {
     const {currentUserId} = this.props;
-    const {categories} = this.state;
-
-    const catId = categoryId || categories[Math.floor(Math.random() * categories.length)].id;
+    const {categories} = this.state;    
+    
+    // for random category - fetch only preferredLanguage (current default: 'en')    
+    const preferredLanguage = "en"; // need to get from users db
+    const cats = categories.filter(category => category.language === preferredLanguage || category.language === "");
+    const catId = categoryId || cats[Math.floor(Math.random() * cats.length)].id;
 
     const questions = await this.fetchQuestions(catId);
+    const randomUsers = this.getUsers(categoryLanguage);
+    const {uid, name: displayName, photoURL} = randomUsers[Math.floor(Math.random() * randomUsers.length)];
 
     const gameQuestions = {};
     questions.forEach(ques => gameQuestions[ques.id] = {
       // To be removed later
       createdTime: Date.now(),
       scores: {
-        'singlePlayerId': Math.floor(Math.random() * 10) + 10
+        [uid]: randomWithProbability(),
       },
     });
 
@@ -161,9 +175,13 @@ class QuizComponent extends Component {
       categoryId: catId,
       singlePlayer: true,
       status: {
-        'singlePlayerId': {
+        [uid]: {
           completed: true
         }
+      },
+      playerDetails: {
+        [uid]: {displayName, photoURL},
+        [currentUserId]: {displayName: this.props.displayName, photoURL: this.props.photoURL}
       }
     };
 
@@ -173,7 +191,7 @@ class QuizComponent extends Component {
   };
 
 
-  render() {
+ render() {
     const { classes, photoURL } = this.props;
     const { redirectURL, categories, isLoading } = this.state;
 
@@ -197,7 +215,7 @@ class QuizComponent extends Component {
               <Typography variant="subtitle2" align="center" paragraph>
                 Invite a friend to play against or test your knowledge playing against a random opponent online.
               </Typography>
-              <div className={classes.heroButtons}>
+              <div className={classes.heroButtons} style={{display: isLoading ? 'none' : 'initial'}}>
                 <Grid container spacing={2} justify="center">
                   <Grid item>
                     <Button
@@ -220,12 +238,12 @@ class QuizComponent extends Component {
         </main>
         {isLoading ? (
           <Loader minHeight={"50vh"} />
-        ) : (
-          <CategoryListView 
+        ) : ( 
+          <Tabview 
             handleInvitationClick={this.handleInvitationClick}
             categories={categories}
-            handleSinglePlayer={this.handleSinglePlayer}  
-          />
+            handleSinglePlayer={this.handleSinglePlayer} 
+          />          
         )}
         <footer className={classes.footer}>
           <Copyright />
